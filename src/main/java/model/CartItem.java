@@ -5,6 +5,15 @@ public class CartItem {
     private int productId;
     private int quantity;
     private double price;
+    private String productName;
+    private double totalPrice;
+    
+    public CartItem(int productId, String productName, double price, int quantity) {
+        this.productId = productId;
+        this.productName = productName;
+        this.price = price;
+        this.quantity = quantity;
+    }
     
     public int getUserId() {
         return userId;
@@ -36,6 +45,22 @@ public class CartItem {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    
+    public double getTotalPrice() {
+    	return totalPrice;
+    }
+    
+    public void setTotalPrice(double totalPrice) {
+    	this.totalPrice = totalPrice;
     }
 
 }
