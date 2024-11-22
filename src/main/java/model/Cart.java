@@ -4,29 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
-	private int userId;
     private List<CartItem> items = new ArrayList<>();
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public List<CartItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<CartItem> items) {
-        this.items = items;
-    }
-
+    
     public void addItem(CartItem item) {
-        for (CartItem existingItem : items) {
-            if (existingItem.getProductId() == item.getProductId()) {
-                existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
+        for (CartItem cartItem : items) {
+            if (cartItem.getProductId() == item.getProductId()) {
+                cartItem.setQuantity(cartItem.getQuantity() + item.getQuantity());
                 return;
             }
         }
@@ -37,8 +20,29 @@ public class Cart {
         items.removeIf(item -> item.getProductId() == productId);
     }
 
-    public double calculateTotalPrice() {
-        return items.stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
+    public void updateItemQuantity(int productId, int quantity) {
+        for (CartItem item : items) {
+            if (item.getProductId() == productId) {
+                item.setQuantity(quantity);
+                return;
+            }
+        }
+    }
+
+    public double getTotalPrice() {
+        double total = 0.0;
+        for (CartItem item : items) {
+            total += item.getPrice() * item.getQuantity();
+        }
+        return total;
+    }
+
+    public List<CartItem> getItems() {
+        return items;
+    }
+
+    public void clear() {
+        items.clear();
     }
 
 }
