@@ -1,13 +1,52 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <title>Product Home Page</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+        }
+        header .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        header .button-container button {
+            margin-top: 10px;
+            background-color: #ffc107;
+            border: none;
+            color: #333;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        header .button-container button:hover {
+            background-color: #e0a800;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px;
         }
         .product {
             display: inline-block;
@@ -16,41 +55,55 @@
             border: 1px solid #ccc;
             padding: 10px;
             text-align: center;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .product img {
             width: 100px;
             height: 100px;
             object-fit: cover;
+            border-radius: 5px;
         }
-        .button-container {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-        }
-        .button-container form button {
-            background-color: #4CAF50;
+        .product button {
+            background-color: #28a745;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
         }
-        .button-container form button:hover {
-            background-color: #45a049;
+        .product button:hover {
+            background-color: #218838;
+        }
+        .product a {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 14px;
+        }
+        .product a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <h1>Product Catalog</h1>
-    <div class="button-container">
-        <form action="admin.jsp" method="get">
-            <button type="submit">Go to Admin Page</button>
-        </form>
-        <form action="login.jsp" method="get">
-            <button type="submit">Go to User Profile</button>
-        </form>
-    </div>
-    <div>
+    <header>
+        <div>
+            <h2>Product Catalog</h2>
+        </div>
+        <div class="button-container">
+            <form action="login.jsp" method="get" style="display: inline;">
+                <button type="submit">Login</button>
+            </form>
+            <form action="admin.jsp" method="get" style="display: inline;">
+                <button type="submit">Admin?</button>
+            </form>
+        </div>
+    </header>
+    <h1>Browse Our Products</h1>
+    <div class="product-container">
         <c:forEach var="product" items="${products}">
             <div class="product">
                 <img src="${product.imagePath}" alt="${product.name}">
@@ -69,3 +122,5 @@
     </div>
 </body>
 </html>
+
+
