@@ -22,11 +22,10 @@
         }
         header .button-container {
             display: flex;
-            flex-direction: column;
-            align-items: flex-end;
+            align-items: center;
         }
         header .button-container button {
-            margin-top: 10px;
+            margin-left: 10px;
             background-color: #ffc107;
             border: none;
             color: #333;
@@ -37,6 +36,18 @@
         }
         header .button-container button:hover {
             background-color: #e0a800;
+        }
+        header .cart-button {
+            background-color: #28a745;
+            color: white;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        header .cart-button:hover {
+            background-color: #218838;
         }
         h1 {
             text-align: center;
@@ -86,6 +97,23 @@
         .product a:hover {
             text-decoration: underline;
         }
+        .admin-container {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+        }
+        .admin-container button {
+            background-color: #ffc107;
+            border: none;
+            color: #333;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .admin-container button:hover {
+            background-color: #e0a800;
+        }
     </style>
 </head>
 <body>
@@ -97,8 +125,8 @@
             <form action="login.jsp" method="get" style="display: inline;">
                 <button type="submit">Login</button>
             </form>
-            <form action="admin.jsp" method="get" style="display: inline;">
-                <button type="submit">Admin?</button>
+            <form action="cart.jsp" method="get" style="display: inline;">
+                <button type="submit" class="cart-button">Cart</button>
             </form>
         </div>
     </header>
@@ -111,16 +139,24 @@
                 <p>Price: $${product.price}</p>
                 <p>Category: ${product.category}</p>
                 <form action="cart" method="post">
-                    <input type="hidden" name="product_id" value="${product.id}">
-                    <label for="quantity_${product.id}">Quantity:</label>
-                    <input type="number" id="quantity_${product.id}" name="quantity" value="1" min="1">
-                    <button type="submit" name="action" value="add">Add to Cart</button>
-                </form>
+    				<input type="hidden" name="product_id" value="${product.id}">
+    				<input type="hidden" name="name" value="${product.name}">
+    				<input type="hidden" name="price" value="${product.price}">
+   		 			<label for="quantity_${product.id}">Quantity:</label>
+    				<input type="number" id="quantity_${product.id}" name="quantity" value="1" min="1">
+    				<button type="submit" name="action" value="add">Add to Cart</button>
+				</form>
                 <a href="ProductController?action=details&id=${product.id}">View Details</a>
             </div>
         </c:forEach>
     </div>
+    <div class="admin-container">
+        <form action="admin.jsp" method="get">
+            <button type="submit">Admin?</button>
+        </form>
+    </div>
 </body>
 </html>
+
 
 
