@@ -1,6 +1,10 @@
 package controller;
 
-import java.io.IOException;
+import model.CartItem;
+import model.Product;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,82 +12,83 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import model.Cart;
-import model.CartItem;
+import dao.ProductDAOImpl;
 
-/**
- * Servlet implementation class CartServlet
- */
-@WebServlet("/CartServlet")
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+@WebServlet("/cart")
 public class CartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+	private ProductDAOImpl productDao;
+	
     public CartServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
+    
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		ServletContext context = config.getServletContext();
+		productDao = new ProductDAOImpl(context);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-
-        Cart cart = (Cart) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new Cart();
-            session.setAttribute("cart", cart);
-        }
-
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
         String action = request.getParameter("action");
 
         if ("add".equals(action)) {
-            addItemToCart(request, cart);
-        } else if ("remove".equals(action)) {
-            removeItemFromCart(request, cart);
-        } else if ("update".equals(action)) {
-            updateCartItemQuantity(request, cart);
-        } else if ("clear".equals(action)) {
-            clearCart(cart);
+            // Retrieve product details from the request
+            int productId = Integer.parseInt(request.getParameter("product_id"));
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+
+            // Get the product from the database
+            Product product = productDao.getProductById(productId);
+
+            if (product != null) {
+                // Get the cart from the session
+                List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+                if (cart == null) {
+                    cart = new ArrayList<>();
+                }
+
+                // Check if the product already exists in the cart
+                boolean itemExists = false;
+                for (CartItem item : cart) {
+                    if (item.getProduct().getId() == productId) {
+                        // Update quantity
+                        item.setQuantity(item.getQuantity() + quantity);
+                        itemExists = true;
+                        break;
+                    }
+                }
+
+                if (!itemExists) {
+                    // Add new item to the cart
+                    cart.add(new CartItem(product, quantity));
+                }
+
+                // Save the cart back to the session
+                session.setAttribute("cart", cart);
+
+                // Redirect to the cart page
+                response.sendRedirect("cart.jsp");
+            } else {
+                // Product not found
+                request.setAttribute("errorMessage", "Product not found!");
+                request.getRequestDispatcher("home.jsp").forward(request, response);
+            }
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
         }
-
-        response.sendRedirect("cart.jsp");
-    }
-	
-	private void addItemToCart(HttpServletRequest request, Cart cart) {
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        String productName = request.getParameter("productName");
-        double price = Double.parseDouble(request.getParameter("price"));
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
-
-        CartItem item = new CartItem(productId, productName, price, quantity);
-        cart.addItem(item);
     }
 
-    private void removeItemFromCart(HttpServletRequest request, Cart cart) {
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        cart.removeItem(productId);
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Handle displaying the cart
+        request.getRequestDispatcher("cart.jsp").forward(request, response);
     }
-
-    private void updateCartItemQuantity(HttpServletRequest request, Cart cart) {
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
-        cart.updateItemQuantity(productId, quantity);
-    }
-
-    private void clearCart(Cart cart) {
-        cart.clear();
-    }
-
 }
+

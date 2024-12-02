@@ -1,53 +1,42 @@
 package model;
 
-import java.util.Date;
 import java.util.List;
 
 public class Order {
-	 private int id;
-	 private int userId;
-	 private double totalPrice;
-	 private Date orderDate;
-	 private List<OrderItem> items;
-	 
-	 public int getId() {
-	     return id;
-	 }
+    private int id;
+    private int userId;
+    private double totalPrice;
+    private List<CartItem> items;
 
-	 public void setId(int id) {
-	     this.id = id;
-	 }
+    public int getId() {
+        return id;
+    }
 
-	 public int getUserId() {
-	     return userId;
-	 }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	 public void setUserId(int userId) {
-	     this.userId = userId;
-	 }
+    public int getUserId() {
+        return userId;
+    }
 
-	 public double getTotalPrice() {
-	     return totalPrice;
-	 }
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
-	 public void setTotalPrice(double totalPrice) {
-	     this.totalPrice = totalPrice;
-	 }
+    public double getTotalPrice() {
+        return totalPrice;
+    }
 
-	 public Date getOrderDate() {
-	     return orderDate;
-	 }
-	 
-	 public void setOrderDate(Date orderDate) {
-	     this.orderDate = orderDate;
-	 }
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
-	 public List<OrderItem> getItems() {
-	     return items;
-	 }
+    public List<CartItem> getItems() {
+        return items;
+    }
 
-	 public void setItems(List<OrderItem> items) {
-	     this.items = items;
-	 }
-
+    public void setItems(List<CartItem> items) {
+        this.items = items;
+    }
 }
