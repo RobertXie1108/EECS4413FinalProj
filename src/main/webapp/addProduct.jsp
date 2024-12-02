@@ -108,8 +108,8 @@
             <label for="price">Price ($):</label>
             <input type="number" id="price" name="price" step="0.01" required placeholder="Enter product price">
             
-            <label for="imageUrl">Image Path:</label>
-            <input type="text" id="imageUrl" name="imageUrl" required placeholder="Enter image path">
+            <label for="imagePath">Image Path:</label>
+            <input type="text" id="imagePath" name="imagePath" required placeholder="Enter image path">
             
             <label for="quantity">Quantity:</label>
             <input type="number" id="quantity" name="quantity" required placeholder="Enter product quantity">

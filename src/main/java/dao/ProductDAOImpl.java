@@ -133,7 +133,6 @@ public class ProductDAOImpl implements ProductDAO {
 
 	@Override
 	public boolean updateProduct(Product product) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

@@ -42,25 +42,22 @@ public class ProductController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		try {
-            String action = request.getParameter("action");
+	    String action = request.getParameter("action");
 
-            if ("details".equals(action)) {
-                int productId = Integer.parseInt(request.getParameter("id"));
-                Product product = productDao.getProductById(productId);
-                request.setAttribute("product", product);
-                request.getRequestDispatcher("productDetails.jsp").forward(request, response);
-            } else {
-                List<Product> products = productDao.getAllProducts();
-                request.setAttribute("products", products);
-                request.getRequestDispatcher("home.jsp").forward(request, response);
-            }
-
-        } catch (Exception e) {
-            throw new ServletException("Error processing product catalog request", e);
-        }
+	    try {
+	        if ("details".equals(action)) {
+	            int productId = Integer.parseInt(request.getParameter("id"));
+	            Product product = productDao.getProductById(productId);
+	            request.setAttribute("product", product);
+	            request.getRequestDispatcher("/WEB-INF/views/productDetails.jsp").forward(request, response);
+	        } else {
+	            List<Product> products = productDao.getAllProducts();
+	            request.setAttribute("products", products);
+	            request.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(request, response);
+	        }
+	    } catch (Exception e) {
+	        throw new ServletException("Error processing product catalog request", e);
+	    }
 	}
 
 	/**
@@ -72,12 +69,11 @@ public class ProductController extends HttpServlet {
 
         try {
             if ("addProduct".equals(action)) {
-                // Add new product (admin functionality)
                 String name = request.getParameter("name");
                 String description = request.getParameter("description");
                 String category = request.getParameter("category");
                 double price = Double.parseDouble(request.getParameter("price"));
-                String imageUrl = request.getParameter("imageUrl");
+                String imagePath = request.getParameter("imagePath");
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
 
                 Product product = new Product();
@@ -85,7 +81,7 @@ public class ProductController extends HttpServlet {
                 product.setDescription(description);
                 product.setCategory(category);
                 product.setPrice(price);
-                product.setImagePath(imageUrl);
+                product.setImagePath(imagePath);
                 product.setQuantity(quantity);
 
                 boolean isAdded = productDao.addProduct(product);

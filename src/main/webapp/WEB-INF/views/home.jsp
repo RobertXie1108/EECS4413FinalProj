@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <title>Product Home Page</title>
     <style>
         body {
@@ -106,7 +106,8 @@
     <div class="product-container">
         <c:forEach var="product" items="${products}">
             <div class="product">
-                <img src="${product.imagePath}" alt="${product.name}">
+                <img src="${pageContext.request.contextPath}/${product.imagePath}" alt="${product.name}">
+
                 <h3>${product.name}</h3>
                 <p>Price: $${product.price}</p>
                 <p>Category: ${product.category}</p>
@@ -116,7 +117,7 @@
                     <input type="number" id="quantity_${product.id}" name="quantity" value="1" min="1">
                     <button type="submit" name="action" value="add">Add to Cart</button>
                 </form>
-                <a href="catalog?action=details&id=${product.id}">View Details</a>
+                <a href="ProductController?action=details&id=${product.id}">View Details</a>
             </div>
         </c:forEach>
     </div>
