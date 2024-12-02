@@ -106,8 +106,7 @@
     <div class="product-container">
         <c:forEach var="product" items="${products}">
             <div class="product">
-                <img src="${pageContext.request.contextPath}/${product.imagePath}" alt="${product.name}">
-
+                <img src="${product.imagePath}" alt="${product.name}">
                 <h3>${product.name}</h3>
                 <p>Price: $${product.price}</p>
                 <p>Category: ${product.category}</p>
