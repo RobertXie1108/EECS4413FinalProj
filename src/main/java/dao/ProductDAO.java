@@ -14,6 +14,5 @@ public interface ProductDAO {
     boolean addProduct(Product product);
     boolean updateProduct(Product product);
     boolean deleteProduct(int id);
-    boolean reduceInventory(int productId, int quantity);
     boolean updateInventory(int productId, int quantity); 
 }

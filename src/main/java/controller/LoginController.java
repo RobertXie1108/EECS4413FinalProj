@@ -57,7 +57,7 @@ public class LoginController extends HttpServlet {
 		User user = userDao.loginUser(username, password);
 		if (user != null) {
 			request.getSession().setAttribute("user", user);
-			response.sendRedirect("home.jsp");
+			response.sendRedirect("ProductController?action=catalog");
 		} else {
 			request.setAttribute("errorMessage", "Invalid username or password");
 			request.getRequestDispatcher("login.jsp").forward(request, response);

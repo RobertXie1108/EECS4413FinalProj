@@ -4,10 +4,11 @@ public class Product {
 	private int id;
     private String name;
     private String category;
-    private String brand;
+    //private String brand;
     private double price;
     private int quantity;
     private String imagePath;
+    private String description;
     
     public int getId() {
     	return id;
@@ -55,6 +56,14 @@ public class Product {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

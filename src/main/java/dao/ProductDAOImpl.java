@@ -2,7 +2,10 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -13,8 +16,16 @@ public class ProductDAOImpl implements ProductDAO {
 	private String dbPath;
 	
 	public ProductDAOImpl(ServletContext servletContext) {
-        this.dbPath = servletContext.getRealPath("/EStore.db");
+        this.dbPath = servletContext.getRealPath("/Estore.db");
     }
+	
+	static {
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private Connection getConnection() throws SQLException {
 		return DriverManager.getConnection("jdbc:sqlite:" + dbPath);
@@ -32,8 +43,23 @@ public class ProductDAOImpl implements ProductDAO {
 
 	@Override
 	public List<Product> getAllProducts() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Product> products = new ArrayList<>();
+		String sql = "SELECT * FROM product";
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+			
+			while (rs.next()) {
+				products.add(mapRowToProduct(rs));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection(connection);
+		}
+		return products;
 	}
 
 	@Override
@@ -44,7 +70,24 @@ public class ProductDAOImpl implements ProductDAO {
 
 	@Override
 	public Product getProductById(int id) {
-		// TODO Auto-generated method stub
+		String sql = "SELECT * FROM product WHERE id = ?";
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql);
+			
+			statement.setInt(1, id);
+			
+			try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowToProduct(rs);
+                }
+            }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection(connection);
+		}
 		return null;
 	}
 
@@ -68,13 +111,28 @@ public class ProductDAOImpl implements ProductDAO {
 
 	@Override
 	public boolean addProduct(Product product) {
-		// TODO Auto-generated method stub
-		return false;
+		String sql = "INSERT INTO product (name, description, category, price, image_url, quantity) VALUES (?, ?, ?, ?, ?, ?)";
+
+	    try (Connection connection = getConnection();
+	         PreparedStatement statement = connection.prepareStatement(sql)) {
+
+	        statement.setString(1, product.getName());
+	        statement.setString(2, product.getDescription());
+	        statement.setString(3, product.getCategory());
+	        statement.setDouble(4, product.getPrice());
+	        statement.setString(5, product.getImagePath());
+	        statement.setInt(6, product.getQuantity());
+
+	        return statement.executeUpdate() > 0;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 
 	@Override
 	public boolean updateProduct(Product product) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -85,15 +143,21 @@ public class ProductDAOImpl implements ProductDAO {
 	}
 
 	@Override
-	public boolean reduceInventory(int productId, int quantity) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public boolean updateInventory(int productId, int quantity) {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	private Product mapRowToProduct(ResultSet rs) throws SQLException {
+        Product product = new Product();
+        product.setId(rs.getInt("id"));
+        product.setName(rs.getString("name"));
+        product.setDescription(rs.getString("description"));
+        product.setCategory(rs.getString("category"));
+        product.setPrice(rs.getDouble("price"));
+        product.setImagePath(rs.getString("image_url"));
+        product.setQuantity(rs.getInt("quantity"));
+        return product;
+    }
 
 }
