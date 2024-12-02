@@ -15,7 +15,7 @@ public class UserDAOImpl implements UserDAO {
 	private String dbPath;
 	
 	public UserDAOImpl(ServletContext servletContext) {
-		this.dbPath = servletContext.getRealPath("/Users.db");
+		this.dbPath = servletContext.getRealPath("/Estore.db");
 	}
 
 	static {

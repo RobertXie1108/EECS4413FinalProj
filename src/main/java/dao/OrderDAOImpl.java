@@ -13,7 +13,7 @@ public class OrderDAOImpl implements OrderDAO {
 	private String dbPath;
 	
 	public OrderDAOImpl(ServletContext servletContext) {
-        this.dbPath = servletContext.getRealPath("/EStore.db");
+        this.dbPath = servletContext.getRealPath("/Estore.db");
     }
 	
 	private Connection getConnection() throws SQLException {
