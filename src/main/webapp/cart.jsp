@@ -77,6 +77,14 @@
         .checkout-button:hover {
             background-color: #218838;
         }
+        .checkout-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .login-prompt {
+            color: red;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -109,23 +117,44 @@
                         </td>
                     </tr>
                 </table>
-                <div class="cart-actions">
-                    <form action="/EECS4413FinalProject/ProductController?action=catalog" method="get">
-    					<button type="submit" class="continue-shopping">Continue shopping</button>
-					</form>
-                    <form action="checkout.jsp" method="get" style="margin: 0;">
-                        <button type="submit" class="checkout-button">Proceed to Checkout</button>
-                    </form>
-                </div>
+
+                <!-- Check if user is logged in before allowing checkout -->
+                <c:choose>
+                    <c:when test="${not empty sessionScope.user}">
+                        <!-- User is logged in, show checkout button -->
+                        <div class="cart-actions">
+                            <form action="/EECS4413FinalProject/ProductController?action=catalog" method="get">
+                                <button type="submit" class="continue-shopping">Continue shopping</button>
+                            </form>
+                            <form action="checkout.jsp" method="get" style="margin: 0;">
+                                <button type="submit" class="checkout-button">Proceed to Checkout</button>
+                            </form>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <!-- User is not logged in, show message and disable button -->
+                        <p class="login-prompt">You need to <a href="login.jsp">log in</a> before proceeding to checkout.</p>
+                        <div class="cart-actions">
+                            <form action="/EECS4413FinalProject/ProductController?action=catalog" method="get">
+                                <button type="submit" class="continue-shopping">Continue shopping</button>
+                            </form>
+                            <button class="checkout-button" disabled>Proceed to Checkout</button>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+
             </c:when>
             <c:otherwise>
                 <p class="empty-cart">Your cart is empty!</p>
                 <div style="text-align: center; margin: 20px;">
-                    <a href="home.jsp" class="continue-shopping">Start Shopping</a>
+                    <form action="/EECS4413FinalProject/ProductController?action=catalog" method="get">
+                        <button type="submit" class="continue-shopping">Continue shopping</button>
+                    </form>
                 </div>
             </c:otherwise>
         </c:choose>
     </div>
 </body>
 </html>
+
 
