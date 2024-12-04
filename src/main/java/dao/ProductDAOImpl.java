@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import model.Author;
+import model.Book;
 import model.Product;
 
 public class ProductDAOImpl implements ProductDAO {
@@ -63,12 +65,6 @@ public class ProductDAOImpl implements ProductDAO {
 	}
 
 	@Override
-	public List<Product> getProductsByCategory(String category) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Product getProductById(int id) {
 		String sql = "SELECT * FROM product WHERE id = ?";
 		Connection connection = null;
@@ -92,22 +88,90 @@ public class ProductDAOImpl implements ProductDAO {
 	}
 
 	@Override
-	public List<Product> searchProducts(String keyword) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Product> searchProducts(String keyWord) {
+	    List<Product> result = new ArrayList<>();
+	    String sql = "SELECT * FROM product " +
+	                 "WHERE name LIKE ? " +
+	                 "OR description LIKE ? " +
+	                 "OR category LIKE ?";
+
+	    String searchKey = "%" + keyWord.trim() + "%";
+
+	    try (Connection connection = getConnection();
+	         PreparedStatement statement = connection.prepareStatement(sql)) {
+
+	        statement.setString(1, searchKey);
+	        statement.setString(2, searchKey);
+	        statement.setString(3, searchKey);
+
+	        try (ResultSet rs = statement.executeQuery()) {
+	            while (rs.next()) {
+	                Product product = mapRowToProduct(rs);
+	                result.add(product);
+	            }
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace(); 
+	    }
+
+	    return result;
 	}
+
 
 	@Override
 	public List<Product> filterProductsByCategory(String category) {
-		// TODO Auto-generated method stub
-		return null;
+	    List<Product> result = new ArrayList<>();
+	    String sql = "SELECT * FROM product WHERE category = ?";
+	    
+	    try (Connection connection = getConnection();
+	         PreparedStatement statement = connection.prepareStatement(sql)) {
+	        
+	        statement.setString(1, category);
+	        try (ResultSet rs = statement.executeQuery()) {
+	            while (rs.next()) {
+	                Product product = mapRowToProduct(rs);
+	                result.add(product);
+	            }
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace(); 
+	    }
+	    return result;
 	}
 
 	@Override
 	public List<Product> sortProductsBy(String attribute, boolean ascending) {
-		// TODO Auto-generated method stub
-		return null;
+	    List<Product> result = new ArrayList<>();
+	    String asc;
+	    
+	    if (!attribute.equalsIgnoreCase("price") && !attribute.equalsIgnoreCase("name") && !attribute.equalsIgnoreCase("category")) {
+	        throw new IllegalArgumentException("Invalid attribute: " + attribute);
+	    }
+	    
+	    if(ascending == true) {
+	    	asc = " ASC";
+	    }
+	    else {
+	    	asc = " DESC";
+	    }
+	    
+	    String sql = "SELECT * FROM product ORDER BY " + attribute + asc;
+
+	    try (Connection connection = getConnection();
+	         PreparedStatement statement = connection.prepareStatement(sql);
+	         ResultSet rs = statement.executeQuery()) {
+
+	        while (rs.next()) {
+	            Product product = mapRowToProduct(rs);
+	            result.add(product);
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace(); 
+	    }
+
+	    return result;
 	}
+
 
 	@Override
 	public boolean addProduct(Product product) {
