@@ -6,7 +6,6 @@ import model.Product;
 
 public interface ProductDAO {
     List<Product> getAllProducts();
-    List<Product> getProductsByCategory(String category);
     Product getProductById(int id);
     List<Product> searchProducts(String keyword);
     List<Product> filterProductsByCategory(String category);
@@ -16,3 +15,4 @@ public interface ProductDAO {
     boolean deleteProduct(int id);
     boolean updateInventory(int productId, int quantity); 
 }
+
