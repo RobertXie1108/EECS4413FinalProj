@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <title>Product Home Page</title>
     <style>
         body {
@@ -122,18 +122,21 @@
             <h2>Product Catalog</h2>
         </div>
         <div class="button-container">
-        	<c:choose>
-        		<c:when test="${not empty sessionScope.user}">
-            	      <form action="logout" method="get" style="display: inline;">
-	              	  <button type="submit">Sign Out</button>
-	            	</form>
-        		</c:when>
-        		<c:otherwise>
-            		<form action="login.jsp" method="get" style="display: inline;">
-            		<button type="submit">Login</button>
-            	</c:otherwise>
-        	</c:choose>
-            
+            <!-- Check if user is logged in -->
+            <c:choose>
+                <c:when test="${not empty sessionScope.user}">
+                    <!-- Profile button for logged-in users -->
+                    <form action="profile.jsp" method="get" style="display: inline;">
+                        <button type="submit">Profile</button>
+                    </form>
+                </c:when>
+                <c:otherwise>
+                    <!-- Login button for non-logged-in users -->
+                    <form action="login.jsp" method="get" style="display: inline;">
+                        <button type="submit">Login</button>
+                    </form>
+                </c:otherwise>
+            </c:choose>
             <form action="cart.jsp" method="get" style="display: inline;">
                 <button type="submit" class="cart-button">Cart</button>
             </form>
@@ -148,13 +151,13 @@
                 <p>Price: $${product.price}</p>
                 <p>Category: ${product.category}</p>
                 <form action="cart" method="post">
-    				<input type="hidden" name="product_id" value="${product.id}">
-    				<input type="hidden" name="name" value="${product.name}">
-    				<input type="hidden" name="price" value="${product.price}">
-   		 			<label for="quantity_${product.id}">Quantity:</label>
-    				<input type="number" id="quantity_${product.id}" name="quantity" value="1" min="1">
-    				<button type="submit" name="action" value="add">Add to Cart</button>
-				</form>
+                    <input type="hidden" name="product_id" value="${product.id}">
+                    <input type="hidden" name="name" value="${product.name}">
+                    <input type="hidden" name="price" value="${product.price}">
+                    <label for="quantity_${product.id}">Quantity:</label>
+                    <input type="number" id="quantity_${product.id}" name="quantity" value="1" min="1">
+                    <button type="submit" name="action" value="add">Add to Cart</button>
+                </form>
                 <a href="ProductController?action=details&id=${product.id}">View Details</a>
             </div>
         </c:forEach>
@@ -166,6 +169,7 @@
     </div>
 </body>
 </html>
+
 
 
 
