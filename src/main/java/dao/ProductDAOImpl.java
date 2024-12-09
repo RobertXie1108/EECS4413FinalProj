@@ -10,8 +10,8 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import model.Author;
-import model.Book;
+//import model.Author;
+//import model.Book;
 import model.Product;
 
 public class ProductDAOImpl implements ProductDAO {
@@ -197,19 +197,53 @@ public class ProductDAOImpl implements ProductDAO {
 
 	@Override
 	public boolean updateProduct(Product product) {
-		return false;
+		String sql = "UPDATE product SET name = ?, description = ?, category = ?, price = ?, image_url = ?, quantity = ? WHERE"
+				+ "id = ?";
+		
+		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, product.getName());
+			statement.setString(2, product.getDescription());
+			statement.setString(3, product.getCategory());
+			statement.setDouble(4, product.getPrice());
+			statement.setString(5, product.getImagePath());
+			statement.setInt(6, product.getQuantity());
+			statement.setInt(7, product.getId());
+			
+			return statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
 	public boolean deleteProduct(int id) {
-		// TODO Auto-generated method stub
-		return false;
+		String sql = "DELETE FROM product WHERE id = ?";
+		
+		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, id);
+			
+			return statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 	}
 
 	@Override
 	public boolean updateInventory(int productId, int quantity) {
-		// TODO Auto-generated method stub
-		return false;
+		String sql = "UPDATE product SET quantity = ? WHERE id = ?";
+		
+		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, quantity);
+			statement.setInt(2, productId);
+			
+			return statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	private Product mapRowToProduct(ResultSet rs) throws SQLException {

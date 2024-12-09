@@ -3,6 +3,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class OrderDAOImpl implements OrderDAO {
             orderStmt.executeUpdate();
 
             // Get the generated order ID
-            var rs = orderStmt.getGeneratedKeys();
+            ResultSet rs = orderStmt.getGeneratedKeys();
             if (!rs.next()) {
                 connection.rollback();
                 return false;
