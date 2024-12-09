@@ -175,7 +175,7 @@ public class ProductDAOImpl implements ProductDAO {
 	public boolean updateProduct(Product product) {
 		String sql = "UPDATE product SET name = ?, description = ?, category = ?, price = ?, image_url = ?, quantity = ? WHERE"
 				+ "id = ?";
-
+		
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, product.getName());
 			statement.setString(2, product.getDescription());
@@ -184,7 +184,7 @@ public class ProductDAOImpl implements ProductDAO {
 			statement.setString(5, product.getImagePath());
 			statement.setInt(6, product.getQuantity());
 			statement.setInt(7, product.getId());
-
+			
 			return statement.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -194,29 +194,26 @@ public class ProductDAOImpl implements ProductDAO {
 
 	@Override
 	public boolean deleteProduct(int id) {
-		// TODO Auto-generated method stub
 		String sql = "DELETE FROM product WHERE id = ?";
-
+		
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, id);
-
+			
 			return statement.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
-
 	}
 
 	@Override
 	public boolean updateInventory(int productId, int quantity) {
-		// TODO Auto-generated method stub
 		String sql = "UPDATE product SET quantity = ? WHERE id = ?";
-
+		
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, quantity);
 			statement.setInt(2, productId);
-
+			
 			return statement.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();

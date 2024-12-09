@@ -96,7 +96,7 @@
             <label for="password">Password:</label>
             <input type="password" name="password" required minlength="6" placeholder="Enter your password">
             
-             <button class="button" type="submit">Sign Up</button><br/><br/>
+            <button class="button" type="submit">Sign Up</button><br/><br/>
             <a href="ProductController" id="backbutton">Back to products</a>
         </form>
 

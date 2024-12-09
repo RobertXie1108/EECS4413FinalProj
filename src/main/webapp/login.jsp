@@ -95,7 +95,6 @@
             
             <label for="password">Password:</label>
             <input type="password" name="password" required placeholder="Enter your password">
-            
             <button class="button" type="submit">Login</button><br/><br/>
             <a href="ProductController" id="backbutton">Back to products</a>
         </form>

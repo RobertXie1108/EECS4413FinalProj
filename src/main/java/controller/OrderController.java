@@ -24,7 +24,6 @@ public class OrderController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private OrderDAOImpl orderDao;
 	private ProductDAO productDao;
-
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -62,12 +61,11 @@ public class OrderController extends HttpServlet {
 
 	        // Now get the user_id from the user object
 	        int userId = user.getId();  // Assuming you have a getId() method in the User class
-
-
+	        
 	        for (CartItem item : cart) {
 	        	int id = item.getProduct().getId();
 	        	int quantity = item.getProduct().getQuantity();
-
+	        	
 	        	if (productDao.getProductById(id).getQuantity() < item.getQuantity()) {
 	        		request.setAttribute("message", "Product" + item.getProduct().getName() + "is not in stock!");
 	        		request.getRequestDispatcher("cart.jsp").forward(request, response);
