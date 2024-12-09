@@ -113,33 +113,29 @@ public class UserDAOImpl implements UserDAO {
 	
 	@Override
 	public User getUserById(int id) {
-        String sql = "SELECT * FROM users WHERE id = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-        	stmt.setInt(1, id);
+	    String sql = "SELECT * FROM users WHERE id = ?";
+	    try (Connection conn = getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        stmt.setInt(1, id);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapToUser(rs);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-	
-	private User mapToUser(ResultSet rs) throws SQLException {
-        User user = new User();
-        user.setId(rs.getInt("id"));
-        user.setUsername(rs.getString("username"));
-        user.setPassword(rs.getString("password"));
-        user.setFullName(rs.getString("full_name"));
-        user.setShippingAddress(rs.getString("shipping_address"));
-        user.setCreditCardNumber(rs.getString("credit_card_number"));
-        user.setCreditCardExpiry(rs.getString("credit_card_expiry"));
-        user.setCreditCardCVV(rs.getString("credit_card_cvv"));
-        return user;
-    }
-
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            if (rs.next()) {
+	                // Directly create the User object and set its properties
+	                User user = new User();
+	                user.setId(rs.getInt("id"));
+	                user.setUsername(rs.getString("username"));
+	                user.setPassword(rs.getString("password"));
+	                user.setFullName(rs.getString("full_name"));
+	                user.setShippingAddress(rs.getString("shipping_address"));
+	                user.setCreditCardNumber(rs.getString("credit_card_number"));
+	                user.setCreditCardExpiry(rs.getString("credit_card_expiry"));
+	                user.setCreditCardCVV(rs.getString("credit_card_cvv"));
+	                return user;
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return null;
+	}
 }

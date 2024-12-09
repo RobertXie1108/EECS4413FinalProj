@@ -48,7 +48,7 @@ public class ProfileServlet extends HttpServlet {
             // Redirect to login if user is not logged in
             response.sendRedirect("login.jsp");
         } else {
-            // Fetch user details from the database to prepopulate the form
+            // Fetch user details from the database using the logged-in user's ID
             User user = userDao.getUserById(loggedInUser.getId());
             if (user != null) {
                 request.setAttribute("user", user);
@@ -67,36 +67,31 @@ public class ProfileServlet extends HttpServlet {
         User loggedInUser = (User) session.getAttribute("user");
 
         if (loggedInUser == null) {
-            // Redirect to login if user is not logged in
             response.sendRedirect("login.jsp");
             return;
         }
 
-        // Retrieve form inputs
         String fullName = request.getParameter("fullName");
         String shippingAddress = request.getParameter("shippingAddress");
         String creditCardNumber = request.getParameter("creditCardNumber");
         String creditCardExpiry = request.getParameter("creditCardExpiry");
         String creditCardCVV = request.getParameter("creditCardCVV");
 
-        // Update the user's details
         loggedInUser.setFullName(fullName);
         loggedInUser.setShippingAddress(shippingAddress);
         loggedInUser.setCreditCardNumber(creditCardNumber);
         loggedInUser.setCreditCardExpiry(creditCardExpiry);
         loggedInUser.setCreditCardCVV(creditCardCVV);
 
-        // Update the user in the database
         boolean isUpdated = userDao.updateUser(loggedInUser);
 
         if (isUpdated) {
-            session.setAttribute("user", loggedInUser); // Update session with new details
+            session.setAttribute("user", loggedInUser);
             request.setAttribute("successMessage", "Profile updated successfully!");
         } else {
             request.setAttribute("errorMessage", "Failed to update profile. Please try again.");
         }
 
-        // Forward back to the profile page
         request.setAttribute("user", loggedInUser);
         request.getRequestDispatcher("profile.jsp").forward(request, response);
     }

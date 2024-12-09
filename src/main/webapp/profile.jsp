@@ -97,7 +97,6 @@
     <div class="form-container">
         <h1>User Profile</h1>
         
-        <!-- Success or Error Message -->
         <c:if test="${not empty successMessage}">
             <p class="message">${successMessage}</p>
         </c:if>
