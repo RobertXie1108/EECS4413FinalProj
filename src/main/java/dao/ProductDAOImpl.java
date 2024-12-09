@@ -10,8 +10,6 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-//import model.Author;
-//import model.Book;
 import model.Product;
 
 public class ProductDAOImpl implements ProductDAO {

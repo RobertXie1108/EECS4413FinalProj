@@ -89,5 +89,57 @@ public class UserDAOImpl implements UserDAO {
 		}
 		return null;
 	}
+	
+	@Override
+	public boolean updateUser(User user) {
+        String sql = "UPDATE users SET full_name = ?, shipping_address = ?, credit_card_number = ?, credit_card_expiry = ?, credit_card_cvv = ? WHERE id = ?";
+	    try (Connection conn = getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+	    	stmt.setString(1, user.getFullName());
+	    	stmt.setString(2, user.getShippingAddress());
+	    	stmt.setString(3, user.getCreditCardNumber());
+	    	stmt.setString(4, user.getCreditCardExpiry());
+	    	stmt.setString(5, user.getCreditCardCVV());
+	    	stmt.setInt(6, user.getId());
+            
+	        return stmt.executeUpdate() > 0;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	@Override
+	public User getUserById(int id) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        	stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapToUser(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+	
+	private User mapToUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getInt("id"));
+        user.setUsername(rs.getString("username"));
+        user.setPassword(rs.getString("password"));
+        user.setFullName(rs.getString("full_name"));
+        user.setShippingAddress(rs.getString("shipping_address"));
+        user.setCreditCardNumber(rs.getString("credit_card_number"));
+        user.setCreditCardExpiry(rs.getString("credit_card_expiry"));
+        user.setCreditCardCVV(rs.getString("credit_card_cvv"));
+        return user;
+    }
 
 }
