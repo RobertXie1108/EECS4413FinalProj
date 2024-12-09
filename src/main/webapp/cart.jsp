@@ -81,6 +81,14 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
+        .remove-button {
+        	background-color: #ff6666;
+        	color: white;
+        }
+        .remove-button:hover {
+        	background-color: #cc0000;
+        	color: white;
+        }
         .login-prompt {
             color: red;
             text-align: center;
@@ -98,6 +106,7 @@
                         <th>Price</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
+                        <th></th>
                     </tr>
                     <c:forEach var="item" items="${sessionScope.cart}">
                         <tr>
@@ -105,6 +114,11 @@
                             <td>$ ${item.product.price}</td>
                             <td>${item.quantity}</td>
                             <td>$ ${item.quantity * item.product.price}</td>
+                            <td><form action="cart" method="post">
+                            	<input type="hidden" name="product_id" value="${item.product.id}">
+                            	<button type="submit" class="remove-button" name="action" value="remove">Remove</button>
+                            </form></td>
+                            
                         </tr>
                     </c:forEach>
                     <tr class="total-row">
