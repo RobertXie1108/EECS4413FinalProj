@@ -43,7 +43,7 @@
             border-radius: 4px;
             font-size: 16px;
         }
-        button {
+        .button {
             width: 100%;
             padding: 12px;
             background-color: #4CAF50;
@@ -54,8 +54,18 @@
             border-radius: 4px;
             transition: background-color 0.3s;
         }
-        button:hover {
+        .button:hover {
             background-color: #45a049;
+        }
+        #backbutton {
+        	display: block; 
+        	text-align: center;
+  			margin: 0 auto;
+        	text-decoration: none;
+        	color: #4CAF50
+        }
+        #backbutton:hover {
+        	color: #45a049;
         }
         .error-message {
             color: red;
@@ -86,7 +96,8 @@
             <label for="password">Password:</label>
             <input type="password" name="password" required minlength="6" placeholder="Enter your password">
             
-            <button type="submit">Sign Up</button>
+             <button class="button" type="submit">Sign Up</button><br/><br/>
+            <a href="ProductController" id="backbutton">Back to products</a>
         </form>
 
         <c:if test="${not empty errorMessage}">

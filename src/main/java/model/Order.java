@@ -7,6 +7,8 @@ public class Order {
     private int userId;
     private double totalPrice;
     private List<CartItem> items;
+    private PaymentInformation paymentInformation;
+    private ShippingInformation shippingInformation;
 
     public int getId() {
         return id;
@@ -38,5 +40,21 @@ public class Order {
 
     public void setItems(List<CartItem> items) {
         this.items = items;
+    }
+    
+    public PaymentInformation getPaymentInformation() {
+    	return this.paymentInformation;
+    }
+    
+    public void setPaymentInformation(PaymentInformation paymentInformation) {
+    	this.paymentInformation = paymentInformation;
+    }
+    
+    public ShippingInformation getShippingInformation() {
+    	return this.shippingInformation;
+    }
+    
+    public void setShippingInformation(ShippingInformation shippingInformation) {
+    	this.shippingInformation = shippingInformation;
     }
 }

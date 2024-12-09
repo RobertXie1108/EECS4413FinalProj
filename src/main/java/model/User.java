@@ -1,9 +1,17 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
 	private int id;
 	private String username;
 	private String password;
+	private List<Order> orderHistory;
+	
+	public User() {
+		orderHistory = new ArrayList<Order>();
+	}
 	
 	public int getId() {
 		return id;
@@ -27,6 +35,10 @@ public class User {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public List<Order> getOrderHistory() {
+		return orderHistory;
 	}
 
 }

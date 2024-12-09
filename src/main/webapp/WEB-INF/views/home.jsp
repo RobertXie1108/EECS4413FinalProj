@@ -122,9 +122,18 @@
             <h2>Product Catalog</h2>
         </div>
         <div class="button-container">
-            <form action="login.jsp" method="get" style="display: inline;">
-                <button type="submit">Login</button>
-            </form>
+        	<c:choose>
+        		<c:when test="${not empty sessionScope.user}">
+            	      <form action="logout" method="get" style="display: inline;">
+	              	  <button type="submit">Sign Out</button>
+	            	</form>
+        		</c:when>
+        		<c:otherwise>
+            		<form action="login.jsp" method="get" style="display: inline;">
+            		<button type="submit">Login</button>
+            	</c:otherwise>
+        	</c:choose>
+            
             <form action="cart.jsp" method="get" style="display: inline;">
                 <button type="submit" class="cart-button">Cart</button>
             </form>
