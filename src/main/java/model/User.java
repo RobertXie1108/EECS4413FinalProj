@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
     private int id;
     private String username;
@@ -9,6 +12,7 @@ public class User {
     private String creditCardNumber;
     private String creditCardExpiry;
     private String creditCardCVV;
+    private List<Order> orderHistory;
 
     public int getId() {
         return id;
@@ -72,6 +76,10 @@ public class User {
 
     public void setCreditCardCVV(String creditCardCVV) {
         this.creditCardCVV = creditCardCVV;
+    }
+
+    public List<Order> getOrderHistory() {
+        return orderHistory;
     }
 }
 
