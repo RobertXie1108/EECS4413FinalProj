@@ -218,9 +218,9 @@
         </form>
     </div>
     <div class="search-container">
-        <form action="ProductController" method="get">
+        <form action=search method="get">
             <input type="hidden" name="action" value="search">
-            <input type="text" name="query" placeholder="Search for products...">
+            <input type="text" name="keyword" placeholder="Search for products...">
             <button type="submit">Search</button>
         </form>
     </div>
