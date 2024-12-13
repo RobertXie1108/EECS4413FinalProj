@@ -38,6 +38,7 @@ public class ProductDAOImpl implements ProductDAO {
 			e.printStackTrace();
 		}
 	}
+	
 	@Override
 	public List<Product> getAllProducts() {
 		List<Product> products = new ArrayList<>();
@@ -58,6 +59,7 @@ public class ProductDAOImpl implements ProductDAO {
 		}
 		return products;
 	}
+	
 	@Override
 	public Product getProductById(int id) {
 		String sql = "SELECT * FROM product WHERE id = ?";
@@ -80,6 +82,7 @@ public class ProductDAOImpl implements ProductDAO {
 		}
 		return null;
 	}
+	
 	@Override
 	public List<Product> searchProducts(String keyWord) {
 	    List<Product> result = new ArrayList<>();
@@ -104,6 +107,7 @@ public class ProductDAOImpl implements ProductDAO {
 	    }
 	    return result;
 	}
+	
 	@Override
 	public List<Product> filterProductsByCategory(String category) {
 	    List<Product> result = new ArrayList<>();
@@ -124,6 +128,7 @@ public class ProductDAOImpl implements ProductDAO {
 	    }
 	    return result;
 	}
+	
 	@Override
 	public List<Product> sortProductsBy(String attribute, boolean ascending) {
 	    List<Product> result = new ArrayList<>();
@@ -153,6 +158,7 @@ public class ProductDAOImpl implements ProductDAO {
 	    }
 	    return result;
 	}
+	
 	@Override
 	public boolean addProduct(Product product) {
 		String sql = "INSERT INTO product (name, description, category, price, image_url, quantity) VALUES (?, ?, ?, ?, ?, ?)";

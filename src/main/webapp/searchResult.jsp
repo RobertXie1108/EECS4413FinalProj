@@ -3,9 +3,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Product Home Page</title>
+    <title>Search Results</title>
     <style>
-        /* Your existing CSS code */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -49,29 +48,6 @@
         }
         header .cart-button:hover {
             background-color: #218838;
-        }
-        .search-bar {
-            display: inline-flex;
-            align-items: center;
-        }
-        .search-bar input[type="text"] {
-            padding: 5px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        .search-bar button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            font-size: 14px;
-            border-radius: 5px;
-            margin-left: 5px;
-            cursor: pointer;
-        }
-        .search-bar button:hover {
-            background-color: #0056b3;
         }
         h1 {
             text-align: center;
@@ -121,47 +97,36 @@
         .product a:hover {
             text-decoration: underline;
         }
-        .admin-container {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-        }
-        .admin-container button {
-            background-color: #ffc107;
-            border: none;
-            color: #333;
-            padding: 5px 10px;
-            font-size: 14px;
+        .back-button {
+            display: block;
+            width: 150px;
+            margin: 20px auto;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
             border-radius: 5px;
-            cursor: pointer;
+            text-decoration: none;
         }
-        .admin-container button:hover {
-            background-color: #e0a800;
+        .back-button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <header>
         <div>
-            <h2>ChippyChips Jersey Store</h2>
+            <h2>Search Results</h2>
         </div>
         <div class="button-container">
-            <!-- Search bar -->
-            <form action="search" method="get" class="search-bar">
-                <input type="text" name="keyword" placeholder="Search for products">
-                <button type="submit">Search</button>
-            </form>
-            
-            <!-- Check if user is logged in -->
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
-                    <!-- Profile button for logged-in users -->
                     <form action="profile.jsp" method="get" style="display: inline;">
                         <button type="submit">Profile</button>
                     </form>
                 </c:when>
                 <c:otherwise>
-                    <!-- Login button for non-logged-in users -->
                     <form action="login.jsp" method="get" style="display: inline;">
                         <button type="submit">Login</button>
                     </form>
@@ -172,8 +137,11 @@
             </form>
         </div>
     </header>
-    <h1>Browse Our Products</h1>
+    <h1>Search Results for: "${param.keyword}"</h1>
     <div class="product-container">
+        <c:if test="${empty products}">
+            <p>No products found matching your search.</p>
+        </c:if>
         <c:forEach var="product" items="${products}">
             <div class="product">
                 <img src="${product.imagePath}" alt="${product.name}">
@@ -192,14 +160,7 @@
             </div>
         </c:forEach>
     </div>
-    <div class="admin-container">
-        <form action="admin.jsp" method="get">
-            <button type="submit">Admin?</button>
-        </form>
-    </div>
+    <a href="ProductController" class="back-button">Back to Home</a>
 </body>
 </html>
-
-
-
 
