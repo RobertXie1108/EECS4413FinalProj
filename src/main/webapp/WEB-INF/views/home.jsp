@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Product Home Page</title>
+    <title>ChippyChips Jersey Store</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,6 +68,29 @@
             cursor: pointer;
         }
         .category-bar button:hover {
+            background-color: #0056b3;
+        }
+        .search-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .search-container input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .search-container button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .search-container button:hover {
             background-color: #0056b3;
         }
         h1 {
@@ -135,12 +158,18 @@
         .admin-container button:hover {
             background-color: #e0a800;
         }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
     <header>
         <div>
-            <h2>Product Catalog</h2>
+            <h2>ChippyChips Jersey Store</h2>
         </div>
         <div class="button-container">
             <c:choose>
@@ -155,6 +184,7 @@
                     </form>
                 </c:otherwise>
             </c:choose>
+            
             <form action="cart.jsp" method="get" style="display: inline;">
                 <button type="submit" class="cart-button">Cart</button>
             </form>
@@ -182,6 +212,13 @@
             <button type="submit">All</button>
         </form>
     </div>
+    <div class="search-container">
+        <form action="ProductController" method="get">
+            <input type="hidden" name="action" value="search">
+            <input type="text" name="query" placeholder="Search for products...">
+            <button type="submit">Search</button>
+        </form>
+    </div>
     <h1>Browse Our Products</h1>
     <div class="product-container">
         <c:forEach var="product" items="${products}">
@@ -206,6 +243,9 @@
         <form action="admin.jsp" method="get">
             <button type="submit">Admin?</button>
         </form>
+    </div>
+        <div class="footer">
+        <p>&copy; ChippyChips. All rights reserved.</p>
     </div>
 </body>
 </html>
