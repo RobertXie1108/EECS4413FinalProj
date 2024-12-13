@@ -5,7 +5,6 @@
 <head>
     <title>Product Home Page</title>
     <style>
-        /* Your existing CSS code */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -50,27 +49,25 @@
         header .cart-button:hover {
             background-color: #218838;
         }
-        .search-bar {
-            display: inline-flex;
-            align-items: center;
+        .category-bar {
+            display: flex;
+            justify-content: center;
+            background-color: #e9ecef;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .search-bar input[type="text"] {
-            padding: 5px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+        .category-bar form {
+            margin: 0 10px;
         }
-        .search-bar button {
+        .category-bar button {
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 5px 10px;
-            font-size: 14px;
+            padding: 10px 15px;
             border-radius: 5px;
-            margin-left: 5px;
             cursor: pointer;
         }
-        .search-bar button:hover {
+        .category-bar button:hover {
             background-color: #0056b3;
         }
         h1 {
@@ -143,25 +140,16 @@
 <body>
     <header>
         <div>
-            <h2>ChippyChips Jersey Store</h2>
+            <h2>Product Catalog</h2>
         </div>
         <div class="button-container">
-            <!-- Search bar -->
-            <form action="search" method="get" class="search-bar">
-                <input type="text" name="keyword" placeholder="Search for products">
-                <button type="submit">Search</button>
-            </form>
-            
-            <!-- Check if user is logged in -->
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
-                    <!-- Profile button for logged-in users -->
                     <form action="profile.jsp" method="get" style="display: inline;">
                         <button type="submit">Profile</button>
                     </form>
                 </c:when>
                 <c:otherwise>
-                    <!-- Login button for non-logged-in users -->
                     <form action="login.jsp" method="get" style="display: inline;">
                         <button type="submit">Login</button>
                     </form>
@@ -172,6 +160,28 @@
             </form>
         </div>
     </header>
+    <div class="category-bar">
+        <form action="ProductController" method="get">
+            <input type="hidden" name="action" value="filter">
+            <input type="hidden" name="category" value="NBA">
+            <button type="submit">NBA</button>
+        </form>
+        <form action="ProductController" method="get">
+            <input type="hidden" name="action" value="filter">
+            <input type="hidden" name="category" value="NHL">
+            <button type="submit">NHL</button>
+        </form>
+        <form action="ProductController" method="get">
+            <input type="hidden" name="action" value="filter">
+            <input type="hidden" name="category" value="MLB">
+            <button type="submit">MLB</button>
+        </form>
+        <form action="ProductController" method="get">
+            <input type="hidden" name="action" value="filter">
+            <input type="hidden" name="category" value="All">
+            <button type="submit">All</button>
+        </form>
+    </div>
     <h1>Browse Our Products</h1>
     <div class="product-container">
         <c:forEach var="product" items="${products}">

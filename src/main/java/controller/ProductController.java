@@ -50,7 +50,21 @@ public class ProductController extends HttpServlet {
 	            Product product = productDao.getProductById(productId);
 	            request.setAttribute("product", product);
 	            request.getRequestDispatcher("/WEB-INF/views/productDetails.jsp").forward(request, response);
-	        } else {
+	        } 
+	        else if ("filter".equals(action)) {
+	            String category = request.getParameter("category");
+	            List<Product> products;
+	            
+	            if ("All".equalsIgnoreCase(category)) {
+	                products = productDao.getAllProducts(); // Fetch all products
+	            } else {
+	                products = productDao.filterProductsByCategory(category); // Fetch filtered products
+	            }
+	            
+	            request.setAttribute("products", products);
+	            request.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(request, response);
+	        }
+	        else {
 	            List<Product> products = productDao.getAllProducts();
 	            request.setAttribute("products", products);
 	            request.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(request, response);
