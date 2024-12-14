@@ -138,6 +138,9 @@
             justify-content: center;
             margin: 20px;
         }
+        .product:hover {
+        	transform: scale(1.05);
+        }
         .product {
             display: inline-block;
             width: 200px;
@@ -211,7 +214,7 @@
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
                     <form action="profile.jsp" method="get" style="display: inline;">
-                        <button type="submit">Profile</button>
+                        <button type="submit">My Account</button>
                     </form>
                 </c:when>
                 <c:otherwise>
@@ -279,24 +282,29 @@
     
     <h1>Browse Our Products</h1>
     <div class="product-container">
-        <c:forEach var="product" items="${products}">
-            <div class="product">
-                <img src="${product.imagePath}" alt="${product.name}">
+    <c:forEach var="product" items="${products}">
+        <div class="product">
+            <form action="ProductController" method="get">
+                <input type="hidden" name="action" value="details">
+                <input type="hidden" name="id" value="${product.id}">
+                <button type="submit" style="background: none">
+                    <img src="${product.imagePath}" alt="${product.name}">
+                </button>
                 <h3>${product.name}</h3>
-                <p>Price: $${product.price}</p>
-                <p>Category: ${product.category}</p>
-                <form action="cart" method="post">
-                    <input type="hidden" name="product_id" value="${product.id}">
-                    <input type="hidden" name="name" value="${product.name}">
-                    <input type="hidden" name="price" value="${product.price}">
-                    <label for="quantity_${product.id}">Quantity:</label>
-                    <input type="number" id="quantity_${product.id}" name="quantity" value="1" min="1">
-                    <button type="submit" name="action" value="add">Add to Cart</button>
-                </form>
-                <a href="ProductController?action=details&id=${product.id}">View Details</a>
-            </div>
-        </c:forEach>
-    </div>
+            </form>
+            <p>Price: $${product.price}</p>
+            <form action="cart" method="post">
+                <input type="hidden" name="product_id" value="${product.id}">
+                <input type="hidden" name="name" value="${product.name}">
+                <input type="hidden" name="price" value="${product.price}">
+                <label for="quantity_${product.id}">Quantity:</label>
+                <input type="number" id="quantity_${product.id}" name="quantity" value="1" min="1">
+                <button type="submit" name="action" value="add" style="margin-top: 10px;">Add to Cart</button>
+            </form>
+        </div>
+    </c:forEach>
+</div>
+    
     <div class="admin-container">
         <form action="admin.jsp" method="get">
             <button type="submit">Admin?</button>
