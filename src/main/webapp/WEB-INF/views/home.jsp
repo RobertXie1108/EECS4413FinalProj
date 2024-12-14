@@ -36,6 +36,7 @@
         }
         header .button-container button:hover {
             background-color: #e0a800;
+            transform: scale(1.05);
         }
         header .cart-button {
             background-color: #28a745;
@@ -48,6 +49,7 @@
         }
         header .cart-button:hover {
             background-color: #218838;
+            transform: scale(1.05);
         }
         .category-bar {
             display: flex;
@@ -69,7 +71,39 @@
         }
         .category-bar button:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
         }
+        .sort-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+        }
+        .sort-container label {
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .sort-container select {
+            font-size: 14px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .sort-button {
+    		background-color: #007bff;
+    		color: white;
+   			border: none;
+    		padding: 8px 16px;
+    		font-size: 14px;
+    		border-radius: 5px;
+    		cursor: pointer;
+    		transition: background-color 0.3s ease, transform 0.2s ease;
+		}
+		.sort-button:hover {
+    		background-color: #0056b3;
+    		transform: scale(1.05);
+		}
         .search-container {
             text-align: center;
             margin: 20px 0;
@@ -92,6 +126,7 @@
         }
         .search-container button:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
         }
         h1 {
             text-align: center;
@@ -157,6 +192,7 @@
         }
         .admin-container button:hover {
             background-color: #e0a800;
+            transform: scale(1.05);
         }
         .footer {
             text-align: center;
@@ -224,6 +260,23 @@
             <button type="submit">Search</button>
         </form>
     </div>
+    <div class="sort-container">
+        <form action="ProductController" method="get">
+    	<label for="sortBy">Sort by:</label>
+    	<select name="sortBy" id="sortBy">
+        	<option value="price">Price</option>
+       		<option value="name">Name</option>
+       		<option value="category">Category</option>
+    	</select>
+    	<label for="sortOrder">Order:</label>
+    	<select name="sortOrder" id="sortOrder">
+       		<option value="asc">Ascending</option>
+       		<option value="desc">Descending</option>
+    		</select>
+		<button type="submit" name="action" value="sort" class="sort-button">Apply</button>
+	</form>
+    </div>
+    
     <h1>Browse Our Products</h1>
     <div class="product-container">
         <c:forEach var="product" items="${products}">

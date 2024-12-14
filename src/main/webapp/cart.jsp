@@ -93,6 +93,12 @@
             color: red;
             text-align: center;
         }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -132,10 +138,8 @@
                     </tr>
                 </table>
 
-                <!-- Check if user is logged in before allowing checkout -->
                 <c:choose>
                     <c:when test="${not empty sessionScope.user}">
-                        <!-- User is logged in, show checkout button -->
                         <div class="cart-actions">
                             <form action="/EECS4413FinalProject/ProductController?action=catalog" method="get">
                                 <button type="submit" class="continue-shopping">Continue shopping</button>
@@ -146,7 +150,6 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <!-- User is not logged in, show message and disable button -->
                         <p class="login-prompt">You need to <a href="login.jsp">log in</a> before proceeding to checkout.</p>
                         <div class="cart-actions">
                             <form action="/EECS4413FinalProject/ProductController?action=catalog" method="get">
@@ -167,6 +170,10 @@
                 </div>
             </c:otherwise>
         </c:choose>
+    </div>
+    </div>
+        <div class="footer">
+        <p>&copy; ChippyChips. All rights reserved.</p>
     </div>
 </body>
 </html>
