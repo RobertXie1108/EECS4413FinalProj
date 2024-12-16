@@ -4,7 +4,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,58 +38,74 @@ public class OrderDAOImpl implements OrderDAO {
 			e.printStackTrace();
 		}
 	}
-	
 	@Override
 	public boolean placeOrder(Order order) {
-	    String insertOrderSql = "INSERT INTO orders (user_id, total_amount, order_date) VALUES (?, ?, ?)";
-	    String insertOrderItemSql = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
-	    boolean isOrderPlaced = false;
+		String insertOrderSQL = "INSERT INTO orders (user_id, order_date, total_amount) VALUES (?, CURRENT_TIMESTAMP, ?)";
+        String insertOrderItemsSQL = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+        try (Connection connection = getConnection()) {
+            connection.setAutoCommit(false); // Enable transaction
+            // Insert into orders
+            PreparedStatement orderStmt = connection.prepareStatement(insertOrderSQL, new String[] {"order_id"});
+            orderStmt.setInt(1, order.getUserId());
+            orderStmt.setDouble(2, order.getTotalPrice());
+            orderStmt.executeUpdate();
 
-	    try (Connection connection = getConnection()) {
-	        connection.setAutoCommit(false); // Begin transaction
+            // Get the generated order ID
+            ResultSet rs = orderStmt.getGeneratedKeys();
+            if (!rs.next()) {
+                connection.rollback();
+                return false;
+            }
+            int orderId = rs.getInt(1);
+            // Insert into order_items
+            PreparedStatement itemsStmt = connection.prepareStatement(insertOrderItemsSQL);
+            for (CartItem item : order.getItems()) {
+                itemsStmt.setInt(1, orderId);
+                itemsStmt.setInt(2, item.getProduct().getId());
+                itemsStmt.setInt(3, item.getQuantity());
+                itemsStmt.setDouble(4, item.getProduct().getPrice());
+                itemsStmt.addBatch();
+            }
+            itemsStmt.executeBatch();
+            connection.commit(); // Commit transaction
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+	}
 
-	        // Insert order into "orders" table
-	        try (PreparedStatement orderStmt = connection.prepareStatement(insertOrderSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-	            orderStmt.setInt(1, order.getUserId());
-	            orderStmt.setDouble(2, order.getTotalPrice());
-	            orderStmt.setString(3, LocalDateTime.now().toString());
-	            orderStmt.executeUpdate();
+	@Override
+	public Order getOrderById(int orderId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public List<Order> getAllOrders() {
+	    List<Order> orders = new ArrayList<>();
+	    String sql = "SELECT o.*, u.username FROM orders o JOIN users u ON o.user_id = u.id";
 
-	            // Retrieve generated order ID
-	            ResultSet rs = orderStmt.getGeneratedKeys();
-	            int orderId = 0;
-	            if (rs.next()) {
-	                orderId = rs.getInt(1);
-	            } else {
-	                throw new SQLException("Failed to retrieve order ID");
-	            }
+	    try (Connection connection = getConnection();
+	         PreparedStatement statement = connection.prepareStatement(sql);
+	         ResultSet rs = statement.executeQuery()) {
 
-	            // Insert items into "order_items" table
-	            try (PreparedStatement itemStmt = connection.prepareStatement(insertOrderItemSql)) {
-	                for (CartItem item : order.getItems()) {
-	                    itemStmt.setInt(1, orderId);
-	                    itemStmt.setInt(2, item.getProduct().getId());
-	                    itemStmt.setInt(3, item.getQuantity());
-	                    itemStmt.setDouble(4, item.getProduct().getPrice());
-	                    itemStmt.addBatch();
-	                }
-	                itemStmt.executeBatch();
-	            }
-
-	            connection.commit(); // Commit transaction
-	            isOrderPlaced = true;
-	        } catch (SQLException e) {
-	            connection.rollback(); // Rollback transaction on failure
-	            throw e;
-	        } finally {
-	            connection.setAutoCommit(true); // Restore default behavior
+	        while (rs.next()) {
+	            Order order = new Order();
+	            order.setId(rs.getInt("id"));
+	            order.setUserId(rs.getInt("user_id"));
+	            order.setTotalPrice(rs.getDouble("total_amount"));
+	            order.setOrderDate(rs.getString("order_date"));
+	            order.setUsername(rs.getString("username")); // Set the username
+	            orders.add(order);
 	        }
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();
 	    }
-	    return isOrderPlaced;
+	    return orders;
 	}
-	
+
+
 	@Override
 	public List<Order> getCustomerOrders(int userId) {
 	    List<Order> orders = new ArrayList<>();
@@ -145,20 +160,93 @@ public class OrderDAOImpl implements OrderDAO {
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-
 	    return items;
 	}
+	
+	@Override
+	public List<Order> getOrdersByCustomer(String username) {
+	    List<Order> orders = new ArrayList<>();
+	    String sql = "SELECT orders.*, users.username " +
+	                 "FROM orders " +
+	                 "JOIN users ON orders.user_id = users.id " +
+	                 "WHERE users.username = ?";
 
+	    try (Connection connection = getConnection();
+	         PreparedStatement statement = connection.prepareStatement(sql)) {
+	        statement.setString(1, username);
+
+	        try (ResultSet rs = statement.executeQuery()) {
+	            while (rs.next()) {
+	                orders.add(mapRowToOrder(rs));
+	            }
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    }
+	    return orders;
+	}
 
 	
 	@Override
-	public Order getOrderById(int orderId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Order> getOrdersByProduct(String productName) {
+		List<Order> orders = new ArrayList<>();
+	    String sql = "SELECT DISTINCT orders.*, users.username " +
+	                 "FROM orders " +
+	                 "JOIN users ON orders.user_id = users.id " +
+	                 "JOIN order_items ON orders.id = order_items.order_id " +
+	                 "JOIN product ON order_items.product_id = product.id " +
+	                 "WHERE product.name = ?";
+
+	    try (Connection connection = getConnection();
+	         PreparedStatement statement = connection.prepareStatement(sql)) {
+	        statement.setString(1, productName);
+
+	        try (ResultSet rs = statement.executeQuery()) {
+	            while (rs.next()) {
+	                orders.add(mapRowToOrder(rs));
+	            }
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    }
+	    return orders;
 	}
+	
 	@Override
-	public List<Order> getAllOrders() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Order> getOrdersByDate(String date) {
+		List<Order> orders = new ArrayList<>();
+	    String sql = "SELECT orders.*, users.username " +
+	                 "FROM orders " +
+	                 "JOIN users ON orders.user_id = users.id " +
+	                 "WHERE DATE(orders.order_date) = DATE(?)";
+
+	    try (Connection connection = getConnection();
+	         PreparedStatement statement = connection.prepareStatement(sql)) {
+	        statement.setString(1, date);
+
+	        try (ResultSet rs = statement.executeQuery()) {
+	            while (rs.next()) {
+	                orders.add(mapRowToOrder(rs));
+	            }
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    }
+	    return orders;
 	}
+
+	private Order mapRowToOrder(ResultSet rs) throws SQLException {
+	    Order order = new Order();
+	    order.setId(rs.getInt("id"));
+	    order.setUserId(rs.getInt("user_id"));
+	    order.setTotalPrice(rs.getDouble("total_amount"));
+	    order.setOrderDate(rs.getString("order_date"));
+	    order.setUsername(rs.getString("username"));
+	    return order;
+	}
+
+
+
+
+
 }

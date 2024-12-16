@@ -65,7 +65,7 @@ public class CustomerController extends HttpServlet {
 	}
 	
 	private void showOrderHistory(HttpServletRequest request, HttpServletResponse response, int userId) throws ServletException, IOException {
-        List<Order> orders = orderDAO.getCustomerOrders(userId);
+        List<Order> orders = orderDAO.getAllOrders();
         
         for (Order order : orders) {
             List<CartItem> items = orderDAO.getOrderItems(order.getId());
@@ -73,7 +73,7 @@ public class CustomerController extends HttpServlet {
         }
 
         request.setAttribute("orders", orders);
-        request.getRequestDispatcher("orderHistory.jsp").forward(request, response);
+        request.getRequestDispatcher("adminOrderHistory.jsp").forward(request, response);
     }
 
 	/**

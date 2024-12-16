@@ -129,7 +129,7 @@
 
         <div class="back-button">
             <form action="admin.jsp" method="get">
-                <button type="submit">Back to Admin Page</button>
+                <button type="submit">Back to Admin Dashboard</button>
             </form>
         </div>
     </div>
