@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
@@ -42,24 +43,36 @@ public class AdminOrderController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-            // Fetch all orders from the database
-            List<Order> orders = orderDao.getAllOrders();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        List<Order> orders = new ArrayList<>();
 
-            // For each order, fetch and set the items
+        try {
+            if ("filterByCustomer".equals(action)) {
+                String customer = request.getParameter("customer");
+                orders = orderDao.getOrdersByCustomer(customer); // New DAO method
+            } else if ("filterByProduct".equals(action)) {
+                String product = request.getParameter("product");
+                orders = orderDao.getOrdersByProduct(product); // New DAO method
+            } else if ("filterByDate".equals(action)) {
+                String date = request.getParameter("date");
+                orders = orderDao.getOrdersByDate(date); // New DAO method
+            } else {
+                orders = orderDao.getAllOrders();
+            }
 
-
-            // Pass the orders list to the JSP
-            request.setAttribute("orders", orders);
-            request.getRequestDispatcher("adminOrderHistory.jsp").forward(request, response);
-
+            for (Order order : orders) {
+                List<CartItem> items = orderDao.getOrderItems(order.getId());
+                order.setItems(items); // Attach items to orders
+            }
         } catch (Exception e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while fetching order history.");
+            throw new ServletException("Error processing sales history", e);
         }
-        
-	}
+
+        request.setAttribute("orders", orders);
+        request.getRequestDispatcher("adminOrderHistory.jsp").forward(request, response);
+    }
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

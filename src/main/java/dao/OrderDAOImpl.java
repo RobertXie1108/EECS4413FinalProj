@@ -165,6 +165,77 @@ public class OrderDAOImpl implements OrderDAO {
 	    }
 	    return items;
 	}
+	
+	@Override
+	public List<Order> getOrdersByCustomer(String customerName) {
+	    String sql = "SELECT o.* FROM orders o " +
+	                 "JOIN users u ON o.user_id = u.id " +
+	                 "WHERE u.full_name LIKE ?";
+	    List<Order> orders = new ArrayList<>();
+	    try (Connection connection = getConnection();
+	         PreparedStatement stmt = connection.prepareStatement(sql)) {
+	        stmt.setString(1, "%" + customerName + "%");
+	        ResultSet rs = stmt.executeQuery();
+	        while (rs.next()) {
+	            Order order = mapRowToOrder(rs);
+	            orders.add(order);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return orders;
+	}
+	
+	@Override
+	public List<Order> getOrdersByProduct(String productName) {
+	    String sql = "SELECT DISTINCT o.* FROM orders o " +
+	                 "JOIN order_items oi ON o.id = oi.order_id " +
+	                 "JOIN product p ON oi.product_id = p.id " +
+	                 "WHERE p.name LIKE ?";
+	    List<Order> orders = new ArrayList<>();
+	    try (Connection connection = getConnection();
+	         PreparedStatement stmt = connection.prepareStatement(sql)) {
+	        stmt.setString(1, "%" + productName + "%");
+	        ResultSet rs = stmt.executeQuery();
+	        while (rs.next()) {
+	            Order order = mapRowToOrder(rs);
+	            orders.add(order);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return orders;
+	}
+	
+	@Override
+	public List<Order> getOrdersByDate(String date) {
+	    String sql = "SELECT * FROM orders WHERE order_date LIKE ?";
+	    List<Order> orders = new ArrayList<>();
+	    try (Connection connection = getConnection();
+	         PreparedStatement stmt = connection.prepareStatement(sql)) {
+	        stmt.setString(1, date + "%");
+	        ResultSet rs = stmt.executeQuery();
+	        while (rs.next()) {
+	            Order order = mapRowToOrder(rs);
+	            orders.add(order);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return orders;
+	}
+
+	private Order mapRowToOrder(ResultSet rs) throws SQLException {
+	    Order order = new Order();
+	    order.setId(rs.getInt("id")); // Set Order ID
+	    order.setUserId(rs.getInt("user_id")); // Set User ID
+	    order.setTotalPrice(rs.getDouble("total_amount")); // Set Total Price
+	    order.setOrderDate(rs.getString("order_date")); // Set Order Date
+	    return order;
+	}
+
+
+
 
 
 }

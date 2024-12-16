@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Order History</title>
+    <title>Sales History</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,84 +15,121 @@
         }
         h1 {
             text-align: center;
-            margin: 20px 0;
+            margin-top: 20px;
             color: #007bff;
-            font-size: 28px;
+        }
+        .filters {
+            width: 90%;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 20px;
+            justify-content: space-around;
+        }
+        .filters form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .filters label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .filters input[type="text"], .filters input[type="date"], .filters select {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .filters button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .filters button:hover {
+            background-color: #0056b3;
         }
         .order-container {
             width: 90%;
-            max-width: 1200px;
             margin: 20px auto;
         }
         .order {
-            background-color: #ffffff;
+            background-color: white;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             padding: 20px;
-            border-left: 5px solid #007bff;
         }
         .order h2 {
-            margin: 0;
             color: #333;
-            font-size: 20px;
-        }
-        .order p {
-            margin: 5px 0;
-            font-size: 16px;
-            color: #555;
+            margin-bottom: 10px;
         }
         .order table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-bottom: 10px;
         }
         .order table th, .order table td {
             padding: 10px;
-            border: 1px solid #ddd;
             text-align: left;
+            border: 1px solid #ddd;
         }
         .order table th {
             background-color: #f4f4f4;
-            font-size: 16px;
-        }
-        .order table td {
-            font-size: 15px;
         }
         .order .total {
             text-align: right;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             margin-top: 10px;
-            color: #007bff;
         }
         .back-button {
+            display: block;
             text-align: center;
-            margin: 30px 0;
+            margin: 20px;
         }
         .back-button button {
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 10px 20px;
             font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .back-button button:hover {
             background-color: #0056b3;
         }
-        .no-orders {
-            text-align: center;
-            color: #777;
-            font-size: 18px;
-            margin-top: 50px;
-        }
     </style>
 </head>
 <body>
-    <h1>Admin Sales History</h1>
+    <h1>Sales History</h1>
+
+    <div class="filters">
+        <form action="AdminOrderController" method="get">
+            <label for="customer">Customer:</label>
+            <input type="text" id="customer" name="customer" placeholder="Customer Name">
+            <button type="submit" name="action" value="filterByCustomer">Filter</button>
+        </form>
+        <form action="AdminOrderController" method="get">
+            <label for="product">Product:</label>
+            <input type="text" id="product" name="product" placeholder="Product Name">
+            <button type="submit" name="action" value="filterByProduct">Filter</button>
+        </form>
+        <form action="AdminOrderController" method="get">
+            <label for="date">Order Date:</label>
+            <input type="date" id="date" name="date">
+            <button type="submit" name="action" value="filterByDate">Filter</button>
+        </form>
+    </div>
+
     <div class="order-container">
         <c:choose>
             <c:when test="${not empty orders}">
@@ -126,13 +163,14 @@
                 </c:forEach>
             </c:when>
             <c:otherwise>
-                <p class="no-orders">No orders found.</p>
+                <p style="text-align: center; color: #555;">No orders found.</p>
             </c:otherwise>
         </c:choose>
     </div>
+
     <div class="back-button">
         <form action="admin.jsp" method="get">
-            <button type="submit">Back to Admin Dashboard</button>
+            <button type="submit">Back to Dashboard</button>
         </form>
     </div>
 </body>

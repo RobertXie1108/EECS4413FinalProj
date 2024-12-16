@@ -11,4 +11,7 @@ public interface OrderDAO {
     Order getOrderById(int orderId);
     List<Order> getAllOrders();
 	List<CartItem> getOrderItems(int orderId);
+	public List<Order> getOrdersByCustomer(String customerName);
+	public List<Order> getOrdersByProduct(String productName);
+	public List<Order> getOrdersByDate(String date);
 }
