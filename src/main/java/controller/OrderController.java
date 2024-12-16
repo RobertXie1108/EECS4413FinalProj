@@ -64,7 +64,7 @@ public class OrderController extends HttpServlet {
 	        
 	        for (CartItem item : cart) {
 	        	int id = item.getProduct().getId();
-	        	int quantity = item.getProduct().getQuantity();
+	        	int quantity = item.getQuantity();
 	        	
 	        	if (productDao.getProductById(id).getQuantity() < item.getQuantity()) {
 	        		request.setAttribute("message", "Product" + item.getProduct().getName() + "is not in stock!");
@@ -78,6 +78,11 @@ public class OrderController extends HttpServlet {
 	        // Create and save the order
 	        Order order = new Order();
 	        order.setUserId(userId);  // Set the user_id
+	        double totalPrice = 0.0;
+	        for (CartItem item : cart) {
+	            totalPrice += item.getProduct().getPrice() * item.getQuantity();
+	        }
+	        order.setTotalPrice(totalPrice);
 	        order.setItems(cart);     // Set the cart items
 	        // Save the order
 	        boolean isOrderSaved = orderDao.placeOrder(order);

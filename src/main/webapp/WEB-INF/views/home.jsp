@@ -168,6 +168,7 @@
         }
         .product button:hover {
             background-color: #218838;
+            transform: scale(1.05);
         }
         .product a {
             display: inline-block;
@@ -227,6 +228,10 @@
             <form action="cart.jsp" method="get" style="display: inline;">
                 <button type="submit" class="cart-button">Cart</button>
             </form>
+            <form action="CustomerController" method="get" style="display: inline;">
+    			<input type="hidden" name="action" value="orderHistory">
+    			<button type="submit">My Orders</button>
+			</form>
         </div>
     </header>
     <div class="category-bar">
