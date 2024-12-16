@@ -311,9 +311,9 @@
 </div>
     
     <div class="admin-container">
-        <form action="admin.jsp" method="get">
-            <button type="submit">Admin?</button>
-        </form>
+        <form action="adminPassword.jsp" method="get" style="display: inline;">
+    		<button type="submit">Admin?</button>
+		</form>
     </div>
         <div class="footer">
         <p>&copy; ChippyChips. All rights reserved.</p>
