@@ -114,8 +114,8 @@
 
     <div class="filters">
         <form action="AdminOrderController" method="get">
-            <label for="customer">Customer:</label>
-            <input type="text" id="customer" name="customer" placeholder="Customer Name">
+            <label for="customer">Username:</label>
+            <input type="text" id="customer" name="customer" placeholder="Username">
             <button type="submit" name="action" value="filterByCustomer">Filter</button>
         </form>
         <form action="AdminOrderController" method="get">
@@ -128,6 +128,9 @@
             <input type="date" id="date" name="date">
             <button type="submit" name="action" value="filterByDate">Filter</button>
         </form>
+        <form action="AdminOrderController" method="get">
+        	<button type="submit" name="action" value="viewAll" style="margin-top: 10px;">Clear Filters</button>
+    	</form>
     </div>
 
     <div class="order-container">
@@ -137,6 +140,7 @@
                     <div class="order">
                         <h2>Order ID: ${order.id}</h2>
                         <p><strong>Customer ID:</strong> ${order.userId}</p>
+                        <p><strong>Username:</strong> ${order.username}</p>
                         <p><strong>Order Date:</strong> ${order.orderDate}</p>
                         <table>
                             <thead>

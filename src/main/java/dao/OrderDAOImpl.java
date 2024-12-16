@@ -84,7 +84,7 @@ public class OrderDAOImpl implements OrderDAO {
 	@Override
 	public List<Order> getAllOrders() {
 	    List<Order> orders = new ArrayList<>();
-	    String sql = "SELECT * FROM orders";
+	    String sql = "SELECT o.*, u.username FROM orders o JOIN users u ON o.user_id = u.id";
 
 	    try (Connection connection = getConnection();
 	         PreparedStatement statement = connection.prepareStatement(sql);
@@ -96,11 +96,7 @@ public class OrderDAOImpl implements OrderDAO {
 	            order.setUserId(rs.getInt("user_id"));
 	            order.setTotalPrice(rs.getDouble("total_amount"));
 	            order.setOrderDate(rs.getString("order_date"));
-
-	            // Fetch items for each order
-	            List<CartItem> items = getOrderItems(order.getId());
-	            order.setItems(items);
-
+	            order.setUsername(rs.getString("username")); // Set the username
 	            orders.add(order);
 	        }
 	    } catch (SQLException ex) {
@@ -108,6 +104,7 @@ public class OrderDAOImpl implements OrderDAO {
 	    }
 	    return orders;
 	}
+
 
 	@Override
 	public List<Order> getCustomerOrders(int userId) {
@@ -167,70 +164,84 @@ public class OrderDAOImpl implements OrderDAO {
 	}
 	
 	@Override
-	public List<Order> getOrdersByCustomer(String customerName) {
-	    String sql = "SELECT o.* FROM orders o " +
-	                 "JOIN users u ON o.user_id = u.id " +
-	                 "WHERE u.full_name LIKE ?";
+	public List<Order> getOrdersByCustomer(String username) {
 	    List<Order> orders = new ArrayList<>();
+	    String sql = "SELECT orders.*, users.username " +
+	                 "FROM orders " +
+	                 "JOIN users ON orders.user_id = users.id " +
+	                 "WHERE users.username = ?";
+
 	    try (Connection connection = getConnection();
-	         PreparedStatement stmt = connection.prepareStatement(sql)) {
-	        stmt.setString(1, "%" + customerName + "%");
-	        ResultSet rs = stmt.executeQuery();
-	        while (rs.next()) {
-	            Order order = mapRowToOrder(rs);
-	            orders.add(order);
+	         PreparedStatement statement = connection.prepareStatement(sql)) {
+	        statement.setString(1, username);
+
+	        try (ResultSet rs = statement.executeQuery()) {
+	            while (rs.next()) {
+	                orders.add(mapRowToOrder(rs));
+	            }
 	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
 	    }
 	    return orders;
 	}
+
 	
 	@Override
 	public List<Order> getOrdersByProduct(String productName) {
-	    String sql = "SELECT DISTINCT o.* FROM orders o " +
-	                 "JOIN order_items oi ON o.id = oi.order_id " +
-	                 "JOIN product p ON oi.product_id = p.id " +
-	                 "WHERE p.name LIKE ?";
-	    List<Order> orders = new ArrayList<>();
+		List<Order> orders = new ArrayList<>();
+	    String sql = "SELECT DISTINCT orders.*, users.username " +
+	                 "FROM orders " +
+	                 "JOIN users ON orders.user_id = users.id " +
+	                 "JOIN order_items ON orders.id = order_items.order_id " +
+	                 "JOIN product ON order_items.product_id = product.id " +
+	                 "WHERE product.name = ?";
+
 	    try (Connection connection = getConnection();
-	         PreparedStatement stmt = connection.prepareStatement(sql)) {
-	        stmt.setString(1, "%" + productName + "%");
-	        ResultSet rs = stmt.executeQuery();
-	        while (rs.next()) {
-	            Order order = mapRowToOrder(rs);
-	            orders.add(order);
+	         PreparedStatement statement = connection.prepareStatement(sql)) {
+	        statement.setString(1, productName);
+
+	        try (ResultSet rs = statement.executeQuery()) {
+	            while (rs.next()) {
+	                orders.add(mapRowToOrder(rs));
+	            }
 	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
 	    }
 	    return orders;
 	}
 	
 	@Override
 	public List<Order> getOrdersByDate(String date) {
-	    String sql = "SELECT * FROM orders WHERE order_date LIKE ?";
-	    List<Order> orders = new ArrayList<>();
+		List<Order> orders = new ArrayList<>();
+	    String sql = "SELECT orders.*, users.username " +
+	                 "FROM orders " +
+	                 "JOIN users ON orders.user_id = users.id " +
+	                 "WHERE DATE(orders.order_date) = DATE(?)";
+
 	    try (Connection connection = getConnection();
-	         PreparedStatement stmt = connection.prepareStatement(sql)) {
-	        stmt.setString(1, date + "%");
-	        ResultSet rs = stmt.executeQuery();
-	        while (rs.next()) {
-	            Order order = mapRowToOrder(rs);
-	            orders.add(order);
+	         PreparedStatement statement = connection.prepareStatement(sql)) {
+	        statement.setString(1, date);
+
+	        try (ResultSet rs = statement.executeQuery()) {
+	            while (rs.next()) {
+	                orders.add(mapRowToOrder(rs));
+	            }
 	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
 	    }
 	    return orders;
 	}
 
 	private Order mapRowToOrder(ResultSet rs) throws SQLException {
 	    Order order = new Order();
-	    order.setId(rs.getInt("id")); // Set Order ID
-	    order.setUserId(rs.getInt("user_id")); // Set User ID
-	    order.setTotalPrice(rs.getDouble("total_amount")); // Set Total Price
-	    order.setOrderDate(rs.getString("order_date")); // Set Order Date
+	    order.setId(rs.getInt("id"));
+	    order.setUserId(rs.getInt("user_id"));
+	    order.setTotalPrice(rs.getDouble("total_amount"));
+	    order.setOrderDate(rs.getString("order_date"));
+	    order.setUsername(rs.getString("username"));
 	    return order;
 	}
 

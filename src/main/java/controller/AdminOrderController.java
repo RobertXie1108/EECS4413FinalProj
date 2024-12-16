@@ -50,13 +50,16 @@ public class AdminOrderController extends HttpServlet {
         try {
             if ("filterByCustomer".equals(action)) {
                 String customer = request.getParameter("customer");
-                orders = orderDao.getOrdersByCustomer(customer); // New DAO method
+                orders = orderDao.getOrdersByCustomer(customer);
             } else if ("filterByProduct".equals(action)) {
                 String product = request.getParameter("product");
-                orders = orderDao.getOrdersByProduct(product); // New DAO method
+                orders = orderDao.getOrdersByProduct(product);
             } else if ("filterByDate".equals(action)) {
                 String date = request.getParameter("date");
-                orders = orderDao.getOrdersByDate(date); // New DAO method
+                orders = orderDao.getOrdersByDate(date); 
+            } else if ("viewAll".equals(action)) {
+                orders = orderDao.getAllOrders();
+                request.setAttribute("orders", orders);
             } else {
                 orders = orderDao.getAllOrders();
             }
