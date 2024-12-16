@@ -47,6 +47,31 @@
             font-size: 18px;
             color: #555;
         }
+        .add-to-cart {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .add-to-cart form {
+            display: inline-block;
+        }
+        .add-to-cart input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .add-to-cart button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .add-to-cart button:hover {
+            background-color: #218838;
+        }
         .back-button {
             text-align: center;
             margin-top: 20px;
@@ -69,10 +94,8 @@
     <div class="container">
         <h2>Product Details</h2>
         <div class="product-detail">
-            <!-- Product Image -->
             <img src="${product.imagePath}" alt="${product.name}">
-
-            <!-- Product Info -->
+            
             <div class="info">
                 <h3>${product.name}</h3>
                 <p><strong>Price:</strong> $${product.price}</p>
@@ -82,12 +105,23 @@
             </div>
         </div>
 
-        <!-- Back Button -->
+        <div class="add-to-cart">
+            <form action="/EECS4413FinalProject/cart" method="post">
+                <input type="hidden" name="product_id" value="${product.id}">
+                <input type="hidden" name="name" value="${product.name}">
+                <input type="hidden" name="price" value="${product.price}">
+                <label for="quantity_${product.id}">Quantity:</label>
+                <input type="number" id="quantity_${product.id}" name="quantity" value="1" min="1">
+                <button type="submit" name="action" value="add">Add to Cart</button>
+            </form>
+        </div>
+
         <div class="back-button">
             <form action="/EECS4413FinalProject/ProductController?action=catalog" method="get">
-    		<button type="submit">Back to Catalog</button>
-			</form>
+                <button type="submit">Back to Home</button>
+            </form>
         </div>
     </div>
 </body>
 </html>
+

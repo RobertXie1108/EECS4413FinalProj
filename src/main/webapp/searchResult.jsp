@@ -69,6 +69,9 @@
             background-color: white;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+        .product:hover{
+        	transform: scale(1.05);
+        }
         .product img {
             width: 100px;
             height: 100px;
@@ -86,6 +89,7 @@
         }
         .product button:hover {
             background-color: #218838;
+            transform: scale(1.05);
         }
         .product a {
             display: inline-block;
@@ -139,27 +143,28 @@
     </header>
     <h1>Search Results for: "${param.keyword}"</h1>
     <div class="product-container">
-        <c:if test="${empty products}">
-            <p>No products found matching your search.</p>
-        </c:if>
-        <c:forEach var="product" items="${products}">
-            <div class="product">
-                <img src="${product.imagePath}" alt="${product.name}">
+    <c:forEach var="product" items="${products}">
+        <div class="product">
+            <form action="ProductController" method="get">
+                <input type="hidden" name="action" value="details">
+                <input type="hidden" name="id" value="${product.id}">
+                <button type="submit" style="background: none">
+                    <img src="${product.imagePath}" alt="${product.name}">
+                </button>
                 <h3>${product.name}</h3>
-                <p>Price: $${product.price}</p>
-                <p>Category: ${product.category}</p>
-                <form action="cart" method="post">
-                    <input type="hidden" name="product_id" value="${product.id}">
-                    <input type="hidden" name="name" value="${product.name}">
-                    <input type="hidden" name="price" value="${product.price}">
-                    <label for="quantity_${product.id}">Quantity:</label>
-                    <input type="number" id="quantity_${product.id}" name="quantity" value="1" min="1">
-                    <button type="submit" name="action" value="add">Add to Cart</button>
-                </form>
-                <a href="ProductController?action=details&id=${product.id}">View Details</a>
-            </div>
-        </c:forEach>
-    </div>
+            </form>
+            <p>Price: $${product.price}</p>
+            <form action="cart" method="post">
+                <input type="hidden" name="product_id" value="${product.id}">
+                <input type="hidden" name="name" value="${product.name}">
+                <input type="hidden" name="price" value="${product.price}">
+                <label for="quantity_${product.id}">Quantity:</label>
+                <input type="number" id="quantity_${product.id}" name="quantity" value="1" min="1">
+                <button type="submit" name="action" value="add" style="margin-top: 10px;">Add to Cart</button>
+            </form>
+        </div>
+    </c:forEach>
+</div>
     <a href="ProductController" class="back-button">Back to Home</a>
 </body>
 </html>
