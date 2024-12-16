@@ -49,8 +49,8 @@ public class AdminOrderController extends HttpServlet {
 
         try {
             if ("filterByCustomer".equals(action)) {
-                String customer = request.getParameter("customer");
-                orders = orderDao.getOrdersByCustomer(customer);
+                String username = request.getParameter("customer");
+                orders = orderDao.getOrdersByCustomer(username);
             } else if ("filterByProduct".equals(action)) {
                 String product = request.getParameter("product");
                 orders = orderDao.getOrdersByProduct(product);
