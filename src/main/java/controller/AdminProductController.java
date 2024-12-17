@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.util.List;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -13,31 +14,18 @@ import javax.servlet.http.HttpServletResponse;
 import dao.ProductDAOImpl;
 import model.Product;
 
-/**
- * Servlet implementation for managing products in the admin dashboard.
- */
 @WebServlet("/AdminProductController")
 public class AdminProductController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ProductDAOImpl productDao;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public AdminProductController() {
-        super();
-    }
-
-    @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         ServletContext context = config.getServletContext();
         productDao = new ProductDAOImpl(context);
     }
 
-    /**
-     * Handles GET requests.
-     */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -61,17 +49,15 @@ public class AdminProductController extends HttpServlet {
         }
     }
 
-    /**
-     * Handles POST requests for updating products.
-     */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
 
         try {
             if ("update".equals(action)) {
-                // Retrieve product details from the form
-                int productId = Integer.parseInt(request.getParameter("id"));
+                // Update product details
+                int id = Integer.parseInt(request.getParameter("id"));
                 String name = request.getParameter("name");
                 String description = request.getParameter("description");
                 String category = request.getParameter("category");
@@ -79,9 +65,8 @@ public class AdminProductController extends HttpServlet {
                 String imagePath = request.getParameter("imagePath");
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
 
-                // Create Product object
                 Product product = new Product();
-                product.setId(productId);
+                product.setId(id);
                 product.setName(name);
                 product.setDescription(description);
                 product.setCategory(category);
@@ -89,25 +74,37 @@ public class AdminProductController extends HttpServlet {
                 product.setImagePath(imagePath);
                 product.setQuantity(quantity);
 
-                // Update the product in the database
                 boolean isUpdated = productDao.updateProduct(product);
 
                 if (isUpdated) {
                     request.setAttribute("message", "Product updated successfully!");
                 } else {
-                    request.setAttribute("errorMessage", "Failed to update product. Please try again.");
+                    request.setAttribute("message", "Failed to update product.");
                 }
+                List<Product> products = productDao.getAllProducts();
+                request.setAttribute("products", products);
+                request.getRequestDispatcher("adminProductList.jsp").forward(request, response);
+            } else if ("delete".equals(action)) {
+                // Delete product
+                int productId = Integer.parseInt(request.getParameter("id"));
+                boolean isDeleted = productDao.deleteProduct(productId);
 
-                // Redirect back to the product list
+                if (isDeleted) {
+                    request.setAttribute("message", "Product deleted successfully!");
+                } else {
+                    request.setAttribute("message", "Failed to delete product.");
+                }
+                // Reload product list after deletion
                 List<Product> products = productDao.getAllProducts();
                 request.setAttribute("products", products);
                 request.getRequestDispatcher("adminProductList.jsp").forward(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ServletException("Error processing product update request", e);
+            throw new ServletException("Error processing product management request", e);
         }
     }
 }
+
 
 

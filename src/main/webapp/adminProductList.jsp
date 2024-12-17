@@ -59,6 +59,33 @@
             text-decoration: none;
             color: #333;
         }
+        .delete-button {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .delete-button:hover {
+        background-color: #c82333;
+    }
+
+    .edit-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .edit-button:hover {
+        background-color: #0056b3;
+    }
     </style>
 </head>
 <body>
@@ -72,19 +99,24 @@
     </header>
     <h1>Select a Product to Edit</h1>
     <div class="product-container">
-        <c:forEach var="product" items="${products}">
-            <div class="product">
-                <form action="AdminProductController" method="get">
-                    <input type="hidden" name="action" value="edit">
-                    <input type="hidden" name="id" value="${product.id}">
-                    <button type="submit" style="border:none; background:none; cursor:pointer;">
-                        <img src="${product.imagePath}" alt="${product.name}">
-                        <h3>${product.name}</h3>
-                        <p>Price: $${product.price}</p>
-                    </button>
-                </form>
-            </div>
-        </c:forEach>
-    </div>
+    <c:forEach var="product" items="${products}">
+        <div class="product">
+            <img src="${product.imagePath}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p>Price: $${product.price}</p>
+            <form action="AdminProductController" method="post" style="display:inline;">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="id" value="${product.id}">
+                <button type="submit" class="delete-button">Delete</button>
+            </form>
+            <form action="AdminProductController" method="get" style="display:inline;">
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="id" value="${product.id}">
+                <button type="submit" class="edit-button">Edit</button>
+            </form>
+        </div>
+    </c:forEach>
+</div>
+
 </body>
 </html>
