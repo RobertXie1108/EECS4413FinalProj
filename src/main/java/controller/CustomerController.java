@@ -73,7 +73,7 @@ public class CustomerController extends HttpServlet {
         }
 
         request.setAttribute("orders", orders);
-        request.getRequestDispatcher("adminOrderHistory.jsp").forward(request, response);
+        request.getRequestDispatcher("orderHistory.jsp").forward(request, response);
     }
 
 	/**

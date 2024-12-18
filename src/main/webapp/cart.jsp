@@ -93,6 +93,17 @@
             color: red;
             text-align: center;
         }
+        .error-message {
+            color: #dc3545;
+            background-color: #f8d7da;
+            padding: 10px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            text-align: center;
+            margin: 10px auto;
+            width: 80%;
+            font-size: 14px;
+        }
         .footer {
             text-align: center;
             margin-top: 50px;
@@ -103,6 +114,13 @@
 </head>
 <body>
     <h1>Your Shopping Cart</h1>
+    
+    <c:if test="${not empty errorMessage}">
+        <div class="error-message">
+            ${errorMessage}
+        </div>
+    </c:if>
+    
     <div class="cart-container">
         <c:choose>
             <c:when test="${not empty sessionScope.cart}">

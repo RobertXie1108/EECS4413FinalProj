@@ -179,8 +179,7 @@ public class ProductDAOImpl implements ProductDAO {
 
 	@Override
 	public boolean updateProduct(Product product) {
-		String sql = "UPDATE product SET name = ?, description = ?, category = ?, price = ?, image_url = ?, quantity = ? WHERE"
-				+ "id = ?";
+		String sql = "UPDATE product SET name = ?, description = ?, category = ?, price = ?, image_url = ?, quantity = ? WHERE id = ?";
 		
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, product.getName());
