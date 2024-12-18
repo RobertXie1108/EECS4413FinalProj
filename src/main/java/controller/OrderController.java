@@ -1,8 +1,6 @@
 package controller;
-
 import java.io.IOException;
 import java.util.List;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -18,7 +16,6 @@ import dao.ProductDAOImpl;
 import model.CartItem;
 import model.Order;
 import model.User;
-
 /**
  * Servlet implementation class OrderController
  */
@@ -27,7 +24,6 @@ public class OrderController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private OrderDAOImpl orderDao;
 	private ProductDAO productDao;
-       
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -49,17 +45,14 @@ public class OrderController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    HttpSession session = request.getSession();
 	    List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-
 	    if (cart == null || cart.isEmpty()) {
 	        request.setAttribute("message", "Your cart is empty!");
 	        request.getRequestDispatcher("cart.jsp").forward(request, response);
 	        return;
 	    }
-
 	    try {
 	        // Retrieve the User object from session
 	        User user = (User) session.getAttribute("user");
-
 	        if (user == null) {
 	            // If the user is not logged in, redirect to login page
 	            response.sendRedirect("login.jsp");
@@ -71,25 +64,28 @@ public class OrderController extends HttpServlet {
 	        
 	        for (CartItem item : cart) {
 	        	int id = item.getProduct().getId();
-	        	int quantity = item.getProduct().getQuantity();
+	        	int quantity = item.getQuantity();
 	        	
 	        	if (productDao.getProductById(id).getQuantity() < item.getQuantity()) {
-	        		request.setAttribute("message", "Product" + item.getProduct().getName() + "is not in stock!");
+	        		request.setAttribute("errorMessage", "Product: " + item.getProduct().getName() + "is not in stock!");
 	        		request.getRequestDispatcher("cart.jsp").forward(request, response);
 	        		return;
 	        	}
-	        	
+
 	        	productDao.updateInventory(id, quantity);
 	        }
-	        
+
 	        // Create and save the order
 	        Order order = new Order();
 	        order.setUserId(userId);  // Set the user_id
+	        double totalPrice = 0.0;
+	        for (CartItem item : cart) {
+	            totalPrice += item.getProduct().getPrice() * item.getQuantity();
+	        }
+	        order.setTotalPrice(totalPrice);
 	        order.setItems(cart);     // Set the cart items
-
 	        // Save the order
 	        boolean isOrderSaved = orderDao.placeOrder(order);
-
 	        if (isOrderSaved) {
 	            session.removeAttribute("cart"); // Clear the cart after successful order
 	            request.setAttribute("message", "Checkout successful! Your order has been placed.");
@@ -102,8 +98,6 @@ public class OrderController extends HttpServlet {
 	        throw new ServletException("Error processing checkout", e);
 	    }
 	}
-
-
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -111,5 +105,4 @@ public class OrderController extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-
 }

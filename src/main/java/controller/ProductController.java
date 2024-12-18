@@ -42,22 +42,37 @@ public class ProductController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    String action = request.getParameter("action");
+		String action = request.getParameter("action");
+        String sortBy = request.getParameter("sortBy");
+        String sortOrder = request.getParameter("sortOrder");
+        String category = request.getParameter("category");
 
-	    try {
-	        if ("details".equals(action)) {
-	            int productId = Integer.parseInt(request.getParameter("id"));
-	            Product product = productDao.getProductById(productId);
-	            request.setAttribute("product", product);
-	            request.getRequestDispatcher("/WEB-INF/views/productDetails.jsp").forward(request, response);
-	        } else {
-	            List<Product> products = productDao.getAllProducts();
-	            request.setAttribute("products", products);
-	            request.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(request, response);
-	        }
-	    } catch (Exception e) {
-	        throw new ServletException("Error processing product catalog request", e);
-	    }
+        try {
+            List<Product> products;
+            boolean ascending = "asc".equalsIgnoreCase(sortOrder);
+
+            if ("details".equals(action)) {
+                int productId = Integer.parseInt(request.getParameter("id"));
+                Product product = productDao.getProductById(productId);
+                request.setAttribute("product", product);
+                request.getRequestDispatcher("/WEB-INF/views/productDetails.jsp").forward(request, response);
+            } else {
+                if (category != null && !category.equalsIgnoreCase("All")) {
+                    products = productDao.filterProductsByCategory(category);
+                } else {
+                    products = productDao.getAllProducts();
+                }
+
+                if (sortBy != null) {
+                    products = productDao.sortProductsBy(sortBy, ascending);
+                }
+
+                request.setAttribute("products", products);
+                request.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            throw new ServletException("Error processing product catalog request", e);
+        }
 	}
 
 	/**

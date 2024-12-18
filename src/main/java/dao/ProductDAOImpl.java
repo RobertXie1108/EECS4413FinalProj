@@ -1,5 +1,4 @@
 package dao;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,8 +9,6 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-//import model.Author;
-//import model.Book;
 import model.Product;
 
 public class ProductDAOImpl implements ProductDAO {
@@ -32,7 +29,6 @@ public class ProductDAOImpl implements ProductDAO {
 	private Connection getConnection() throws SQLException {
 		return DriverManager.getConnection("jdbc:sqlite:" + dbPath);
 	}
-
 	private void closeConnection(Connection connection) {
 		if (connection == null)
 			return;
@@ -42,7 +38,7 @@ public class ProductDAOImpl implements ProductDAO {
 			e.printStackTrace();
 		}
 	}
-
+	
 	@Override
 	public List<Product> getAllProducts() {
 		List<Product> products = new ArrayList<>();
@@ -63,7 +59,7 @@ public class ProductDAOImpl implements ProductDAO {
 		}
 		return products;
 	}
-
+	
 	@Override
 	public Product getProductById(int id) {
 		String sql = "SELECT * FROM product WHERE id = ?";
@@ -86,7 +82,7 @@ public class ProductDAOImpl implements ProductDAO {
 		}
 		return null;
 	}
-
+	
 	@Override
 	public List<Product> searchProducts(String keyWord) {
 	    List<Product> result = new ArrayList<>();
@@ -94,16 +90,12 @@ public class ProductDAOImpl implements ProductDAO {
 	                 "WHERE name LIKE ? " +
 	                 "OR description LIKE ? " +
 	                 "OR category LIKE ?";
-
 	    String searchKey = "%" + keyWord.trim() + "%";
-
 	    try (Connection connection = getConnection();
 	         PreparedStatement statement = connection.prepareStatement(sql)) {
-
 	        statement.setString(1, searchKey);
 	        statement.setString(2, searchKey);
 	        statement.setString(3, searchKey);
-
 	        try (ResultSet rs = statement.executeQuery()) {
 	            while (rs.next()) {
 	                Product product = mapRowToProduct(rs);
@@ -113,11 +105,9 @@ public class ProductDAOImpl implements ProductDAO {
 	    } catch (SQLException ex) {
 	        ex.printStackTrace(); 
 	    }
-
 	    return result;
 	}
-
-
+	
 	@Override
 	public List<Product> filterProductsByCategory(String category) {
 	    List<Product> result = new ArrayList<>();
@@ -138,7 +128,7 @@ public class ProductDAOImpl implements ProductDAO {
 	    }
 	    return result;
 	}
-
+	
 	@Override
 	public List<Product> sortProductsBy(String attribute, boolean ascending) {
 	    List<Product> result = new ArrayList<>();
@@ -156,11 +146,9 @@ public class ProductDAOImpl implements ProductDAO {
 	    }
 	    
 	    String sql = "SELECT * FROM product ORDER BY " + attribute + asc;
-
 	    try (Connection connection = getConnection();
 	         PreparedStatement statement = connection.prepareStatement(sql);
 	         ResultSet rs = statement.executeQuery()) {
-
 	        while (rs.next()) {
 	            Product product = mapRowToProduct(rs);
 	            result.add(product);
@@ -168,27 +156,21 @@ public class ProductDAOImpl implements ProductDAO {
 	    } catch (SQLException ex) {
 	        ex.printStackTrace(); 
 	    }
-
 	    return result;
 	}
-
-
+	
 	@Override
 	public boolean addProduct(Product product) {
 		String sql = "INSERT INTO product (name, description, category, price, image_url, quantity) VALUES (?, ?, ?, ?, ?, ?)";
-
 	    try (Connection connection = getConnection();
 	         PreparedStatement statement = connection.prepareStatement(sql)) {
-
 	        statement.setString(1, product.getName());
 	        statement.setString(2, product.getDescription());
 	        statement.setString(3, product.getCategory());
 	        statement.setDouble(4, product.getPrice());
 	        statement.setString(5, product.getImagePath());
 	        statement.setInt(6, product.getQuantity());
-
 	        return statement.executeUpdate() > 0;
-
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        return false;
@@ -197,8 +179,7 @@ public class ProductDAOImpl implements ProductDAO {
 
 	@Override
 	public boolean updateProduct(Product product) {
-		String sql = "UPDATE product SET name = ?, description = ?, category = ?, price = ?, image_url = ?, quantity = ? WHERE"
-				+ "id = ?";
+		String sql = "UPDATE product SET name = ?, description = ?, category = ?, price = ?, image_url = ?, quantity = ? WHERE id = ?";
 		
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, product.getName());
@@ -228,7 +209,6 @@ public class ProductDAOImpl implements ProductDAO {
 			e.printStackTrace();
 			return false;
 		}
-		
 	}
 
 	@Override
@@ -245,7 +225,7 @@ public class ProductDAOImpl implements ProductDAO {
 			return false;
 		}
 	}
-	
+
 	private Product mapRowToProduct(ResultSet rs) throws SQLException {
         Product product = new Product();
         product.setId(rs.getInt("id"));
@@ -257,5 +237,4 @@ public class ProductDAOImpl implements ProductDAO {
         product.setQuantity(rs.getInt("quantity"));
         return product;
     }
-
 }

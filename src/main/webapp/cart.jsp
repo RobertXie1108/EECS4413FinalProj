@@ -81,14 +81,46 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
+        .remove-button {
+        	background-color: #ff6666;
+        	color: white;
+        }
+        .remove-button:hover {
+        	background-color: #cc0000;
+        	color: white;
+        }
         .login-prompt {
             color: red;
             text-align: center;
+        }
+        .error-message {
+            color: #dc3545;
+            background-color: #f8d7da;
+            padding: 10px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            text-align: center;
+            margin: 10px auto;
+            width: 80%;
+            font-size: 14px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <h1>Your Shopping Cart</h1>
+    
+    <c:if test="${not empty errorMessage}">
+        <div class="error-message">
+            ${errorMessage}
+        </div>
+    </c:if>
+    
     <div class="cart-container">
         <c:choose>
             <c:when test="${not empty sessionScope.cart}">
@@ -98,6 +130,7 @@
                         <th>Price</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
+                        <th></th>
                     </tr>
                     <c:forEach var="item" items="${sessionScope.cart}">
                         <tr>
@@ -105,6 +138,11 @@
                             <td>$ ${item.product.price}</td>
                             <td>${item.quantity}</td>
                             <td>$ ${item.quantity * item.product.price}</td>
+                            <td><form action="cart" method="post">
+                            	<input type="hidden" name="product_id" value="${item.product.id}">
+                            	<button type="submit" class="remove-button" name="action" value="remove">Remove</button>
+                            </form></td>
+                            
                         </tr>
                     </c:forEach>
                     <tr class="total-row">
@@ -118,10 +156,8 @@
                     </tr>
                 </table>
 
-                <!-- Check if user is logged in before allowing checkout -->
                 <c:choose>
                     <c:when test="${not empty sessionScope.user}">
-                        <!-- User is logged in, show checkout button -->
                         <div class="cart-actions">
                             <form action="/EECS4413FinalProject/ProductController?action=catalog" method="get">
                                 <button type="submit" class="continue-shopping">Continue shopping</button>
@@ -132,7 +168,6 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <!-- User is not logged in, show message and disable button -->
                         <p class="login-prompt">You need to <a href="login.jsp">log in</a> before proceeding to checkout.</p>
                         <div class="cart-actions">
                             <form action="/EECS4413FinalProject/ProductController?action=catalog" method="get">
@@ -153,6 +188,10 @@
                 </div>
             </c:otherwise>
         </c:choose>
+    </div>
+    </div>
+        <div class="footer">
+        <p>&copy; ChippyChips. All rights reserved.</p>
     </div>
 </body>
 </html>

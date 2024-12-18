@@ -7,6 +7,8 @@ public class Order {
     private int userId;
     private double totalPrice;
     private List<CartItem> items;
+    private String orderDate;
+    private String username;
 
     public int getId() {
         return id;
@@ -39,4 +41,22 @@ public class Order {
     public void setItems(List<CartItem> items) {
         this.items = items;
     }
+    
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
+    }
+    
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    
 }

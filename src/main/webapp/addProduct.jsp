@@ -88,6 +88,12 @@
         .back-button button:hover {
             background-color: #d32f2f;
         }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -108,8 +114,8 @@
             <label for="price">Price ($):</label>
             <input type="number" id="price" name="price" step="0.01" required placeholder="Enter product price">
             
-            <label for="imagePath">Image Path:</label>
-            <input type="text" id="imagePath" name="imagePath" required placeholder="Enter image path">
+            <label for="imagePath">Image URL:</label>
+            <input type="text" id="imagePath" name="imagePath" required placeholder="Enter image URL">
             
             <label for="quantity">Quantity:</label>
             <input type="number" id="quantity" name="quantity" required placeholder="Enter product quantity">
@@ -123,9 +129,12 @@
 
         <div class="back-button">
             <form action="admin.jsp" method="get">
-                <button type="submit">Back to Admin Page</button>
+                <button type="submit">Back to Admin Dashboard</button>
             </form>
         </div>
+    </div>
+    <div class="footer">
+        <p>&copy; ChippyChips. All rights reserved.</p>
     </div>
 </body>
 </html>
