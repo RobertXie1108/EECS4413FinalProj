@@ -1,6 +1,11 @@
 package model;
 
-public class CartItem {
+import java.io.Serializable;
+/* 
+ * JavaBean class to represent an item in the cart.
+ * Includes the product, the quantity of it in the cart, and the price.
+ */
+public class CartItem implements Serializable{
     private Product product;
     private int quantity;
     private double price;
