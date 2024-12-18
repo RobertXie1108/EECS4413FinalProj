@@ -67,7 +67,7 @@ public class OrderController extends HttpServlet {
 	        	int quantity = item.getQuantity();
 	        	
 	        	if (productDao.getProductById(id).getQuantity() < item.getQuantity()) {
-	        		request.setAttribute("message", "Product" + item.getProduct().getName() + "is not in stock!");
+	        		request.setAttribute("errorMessage", "Product: " + item.getProduct().getName() + "is not in stock!");
 	        		request.getRequestDispatcher("cart.jsp").forward(request, response);
 	        		return;
 	        	}

@@ -16,13 +16,31 @@
         header {
             background-color: #007bff;
             color: white;
-            padding: 20px 0;
-            text-align: center;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         header h1 {
             margin: 0;
             font-size: 28px;
+        }
+        .home-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .home-button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
         }
         .container {
             width: 80%;
@@ -73,11 +91,12 @@
 <body>
     <header>
         <h1>Admin Dashboard</h1>
+        <a href="ProductController?action=catalog" class="home-button">Back to Home</a>
     </header>
     <div class="container">
         <div class="button-container">
             <a href="addProduct.jsp">Add New Product</a>
-            <a href="ProductController?action=catalog">View All Products</a>
+            <a href="AdminProductController">Edit Product</a>
             <form action="AdminOrderController" method="get">
                 <button type="submit">View Sales History</button>
             </form>
