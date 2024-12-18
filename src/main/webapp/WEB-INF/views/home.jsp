@@ -214,7 +214,7 @@
         <div class="button-container">
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
-                    <form action="profile.jsp" method="get" style="display: inline;">
+                    <form action="ProfileServlet" method="get" style="display: inline;">
                         <button type="submit">My Account</button>
                     </form>
                 </c:when>

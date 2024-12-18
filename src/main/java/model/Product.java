@@ -1,6 +1,13 @@
 package model;
 
-public class Product {
+import java.io.Serializable;
+
+/*
+ * JavaBean class to represent a product in the store.
+ * Includes the id of the product, name, category (sport), price,
+ * quantity in the inventory, an internet url path for the image, and description.
+ */
+public class Product implements Serializable {
 	private int id;
     private String name;
     private String category;
