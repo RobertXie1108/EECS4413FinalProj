@@ -10,6 +10,10 @@ import javax.servlet.ServletContext;
 
 import model.User;
 
+/*
+ * This DAO implementation handles database operations related to "User" entity
+ * Features one Create method, two Read methods, one Update method
+ */
 public class UserDAOImpl implements UserDAO {
 	
 	private String dbPath;
@@ -40,6 +44,11 @@ public class UserDAOImpl implements UserDAO {
 		}
 	}
 
+	/*
+	 * Creates a new user in database
+	 * @param user The user to add
+	 * @return True if successful, false otherwise
+	 */
 	@Override
 	public boolean registerUser(User user) {
 		String sql = "INSERT INTO users (username, password) VALUES (?,?)";
@@ -52,7 +61,12 @@ public class UserDAOImpl implements UserDAO {
 			statement.setString(1, user.getUsername());
 			statement.setString(2, user.getPassword());
 			
-			return statement.executeUpdate() > 0;
+			boolean result = statement.executeUpdate() > 0;
+			
+			System.out.println("Create User Result: " + result);
+			System.out.println("DB Path: " + dbPath);
+			
+			return result;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -61,6 +75,12 @@ public class UserDAOImpl implements UserDAO {
 		}
 	}
 
+	/*
+	 * Retrieves user given log in information (username, password)
+	 * @param username Username of user to retrieve
+	 * @param password Password of user to retrieve
+	 * @return User with id, username, and password. Null if not possible.
+	 */
 	@Override
 	public User loginUser(String username, String password) {
 		String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
@@ -90,6 +110,11 @@ public class UserDAOImpl implements UserDAO {
 		return null;
 	}
 	
+	/*
+	 * Updates user in database
+	 * @param user User with updated data
+	 * @return True if successful, otherwise false
+	 */
 	@Override
 	public boolean updateUser(User user) {
         String sql = "UPDATE users SET full_name = ?, shipping_address = ?, credit_card_number = ?, credit_card_expiry = ?, credit_card_cvv = ? WHERE id = ?";
@@ -103,14 +128,23 @@ public class UserDAOImpl implements UserDAO {
 	    	stmt.setString(5, user.getCreditCardCVV());
 	    	stmt.setInt(6, user.getId());
             
-	        return stmt.executeUpdate() > 0;
+	        boolean result = stmt.executeUpdate() > 0;
+	        
+	        System.out.println("Update User Result: " + result);
+			System.out.println("DB Path: " + dbPath);
+			
+			return result;
 
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        return false;
 	    }
 	}
-	
+	/*
+	 * Retrieves user given an id
+	 * @param id The id of the user to retrieve
+	 * @return True if successful, otherwise false
+	 */
 	@Override
 	public User getUserById(int id) {
 	    String sql = "SELECT * FROM users WHERE id = ?";
@@ -129,7 +163,7 @@ public class UserDAOImpl implements UserDAO {
 	                user.setShippingAddress(rs.getString("shipping_address"));
 	                user.setCreditCardNumber(rs.getString("credit_card_number"));
 	                user.setCreditCardExpiry(rs.getString("credit_card_expiry"));
-	                user.setCreditCardCVV(rs.getString("credit_card_cvv"));
+	                user.setCreditCardCVV(rs.getString("credit_card_cvv"));	// Set attributes
 	                return user;
 	            }
 	        }
