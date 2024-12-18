@@ -35,6 +35,33 @@
             text-align: right;
             margin-top: 10px;
         }
+        .payment-info {
+		    font-family: Arial, sans-serif;
+		    margin-bottom: 20px;
+		}
+				
+		.payment-info .input-group {
+		    display: flex;
+		    gap: 10px;
+		    align-items: center;
+		}
+		.payment-info input {
+		    padding: 8px;
+		    font-size: 14px;
+		    border: 1px solid #ccc;
+		    border-radius: 4px;
+		    outline: none;
+		}
+		.payment-info input:focus {
+		    border-color: #007BFF; /* Highlighted border */
+		    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+		}
+		#ccnumber {
+		    width: 50%;
+		}
+		#ccexpiry, #cccvv {
+			width: 25%;
+		}
         .checkout-button {
             display: block;
             width: 100%;
@@ -112,15 +139,21 @@
 
                     <!-- Shipping Address -->
                     <label for="address">Shipping Address:</label>
-                    <input type="text" id="address" name="address" required placeholder="Enter your shipping address">
+                    <input type="text" id="address" name="address" value="${user.shippingAddress}" required placeholder="Enter your shipping address">
 
-                    <!-- Payment Method -->
-                    <label for="paymentMethod">Payment Method:</label>
-                    <select id="paymentMethod" name="paymentMethod" required>
-                        <option value="creditCard">Credit Card</option>
-                        <option value="paypal">PayPal</option>
-                    </select>
-
+                    <!-- Payment Information -->
+                    <div class="payment-info">
+					    <label for="paymentMethod">Payment Information:</label>
+					    <div class="input-group">
+					        <input type="text" id="ccnumber" name="ccnumber" value="${user.creditCardNumber}" 
+					               required placeholder="Credit Card Number">
+					        <input type="text" id="ccexpiry" name="ccexpiry" value="${user.creditCardExpiry}" 
+					               required placeholder="MM/YY">
+					        <input type="text" id="cccvv" name="cccvv" value="${user.creditCardCVV}" 
+					               required placeholder="CVV">
+					    </div>
+					</div>
+					
                     <button type="submit" class="checkout-button">Confirm & Checkout</button>
                 </form>
             </c:when>
