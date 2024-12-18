@@ -74,7 +74,7 @@ public class OrderController extends HttpServlet {
 
 	        	productDao.updateInventory(id, quantity);
 	        }
-
+	        
 	        // Create and save the order
 	        Order order = new Order();
 	        order.setUserId(userId);  // Set the user_id
