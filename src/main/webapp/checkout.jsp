@@ -96,6 +96,30 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        .error-messages {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 10vh; 
+            max-width: 400px; 
+            margin: 10vh auto; 
+            background-color: #f8d7da;
+            color: #721c24;
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-messages ul {
+            list-style-type: none; /* Remove bullet points */
+            padding: 0;
+        }
+        .error-messages li {
+            margin-bottom: 10px;
+        }
+
     </style>
 </head>
 <body>
@@ -127,6 +151,17 @@
                     </c:forEach>${total}
                 </div>
 
+				<c:if test="${not empty errorMessages}">
+					<div class="error-messages">
+						<h2>Error!</h2>
+						<ul>
+							<c:forEach var="msg" items="${errorMessages}">
+								<li>${msg}</li>
+							</c:forEach>
+						</ul>
+					</div>
+				</c:if>
+				
                 <!-- Shipping and Payment Information Form -->
                 <h2>Shipping and Payment Information</h2>
                 <form action="OrderController" method="post">

@@ -5,9 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import model.Product;
 import model.User;
 
 /*
@@ -43,6 +46,30 @@ public class UserDAOImpl implements UserDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	/*
+	 * Retrieves all products in database
+	 * @return List of Product objects
+	 */
+	public List<User> getAllUsers() {
+		List<User> users = new ArrayList<>();
+		String sql = "SELECT * FROM users";
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+			
+			while (rs.next()) {
+				users.add(mapRowToUser(rs));	// Create Product from resultset and add to list
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection(connection);
+		}
+		return users;
+	}
 
 	/*
 	 * Creates a new user in database
@@ -74,6 +101,8 @@ public class UserDAOImpl implements UserDAO {
 			closeConnection(connection);
 		}
 	}
+	
+	
 
 	/*
 	 * Retrieves user given log in information (username, password)
@@ -171,5 +200,28 @@ public class UserDAOImpl implements UserDAO {
 	        e.printStackTrace();
 	    }
 	    return null;
+	}
+	
+	/*
+	 * Utility method to create a User from a query or result set
+	 * @param rs Result set to retrieve information from
+	 * @return User filled with result set data
+	 */
+	private User mapRowToUser(ResultSet rs) {
+		User user = new User();
+		try {
+			user.setId(rs.getInt("id"));
+			user.setUsername(rs.getString("username"));
+			user.setPassword(rs.getString("password"));
+			user.setFullName(rs.getString("full_name"));
+			user.setShippingAddress(rs.getString("shipping_address"));
+			user.setCreditCardNumber(rs.getString("credit_card_number"));
+			user.setCreditCardExpiry(rs.getString("credit_card_expiry"));
+			user.setCreditCardCVV(rs.getString("credit_card_cvv"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return user;
 	}
 }

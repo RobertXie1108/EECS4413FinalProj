@@ -257,6 +257,11 @@
         </form>
         <form action="ProductController" method="get">
             <input type="hidden" name="action" value="filter">
+            <input type="hidden" name="category" value="Soccer">
+            <button type="submit">Soccer</button>
+        </form>
+        <form action="ProductController" method="get">
+            <input type="hidden" name="action" value="filter">
             <input type="hidden" name="category" value="All">
             <button type="submit">All</button>
         </form>
