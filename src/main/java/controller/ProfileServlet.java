@@ -76,13 +76,27 @@ public class ProfileServlet extends HttpServlet {
         String creditCardNumber = request.getParameter("creditCardNumber");
         String creditCardExpiry = request.getParameter("creditCardExpiry");
         String creditCardCVV = request.getParameter("creditCardCVV");
+        
+        String currName = loggedInUser.getFullName();
+        String currAddr = loggedInUser.getShippingAddress();
+        String currNumber = loggedInUser.getCreditCardNumber();
+        String currExpiry = loggedInUser.getCreditCardExpiry();
+        String currCVV = loggedInUser.getCreditCardCVV();
+        
+        // Check if logged in user attributes already has a value (in database) before setting them
+        // Also checks if they're changed or not before setting them
+        if (null == currName || !currName.equals(fullName)) { loggedInUser.setFullName(fullName); }
+        if (null == currAddr || !currAddr.equals(shippingAddress)) { loggedInUser.setShippingAddress(shippingAddress); }
+        if (null == currNumber || !currNumber.equals(creditCardNumber)) { loggedInUser.setCreditCardNumber(creditCardNumber); }
+        if (null == currExpiry || !currExpiry.equals(creditCardExpiry)) { loggedInUser.setCreditCardExpiry(creditCardExpiry); }
+        if (null == currCVV || !currCVV.equals(creditCardCVV)) { loggedInUser.setCreditCardCVV(creditCardCVV); }
 
-        loggedInUser.setFullName(fullName);
-        loggedInUser.setShippingAddress(shippingAddress);
-        loggedInUser.setCreditCardNumber(creditCardNumber);
-        loggedInUser.setCreditCardExpiry(creditCardExpiry);
-        loggedInUser.setCreditCardCVV(creditCardCVV);
-
+        /*// Debugging
+        System.out.printf("Full Name: %s\nShipping Address: %s\nCCNumber: %s\nCCExpiry: %s\nCCCVV: %s\n", loggedInUser.getFullName(),
+        		loggedInUser.getShippingAddress(), loggedInUser.getCreditCardNumber(),
+        		loggedInUser.getCreditCardExpiry(), loggedInUser.getCreditCardCVV());
+        */
+        
         boolean isUpdated = userDao.updateUser(loggedInUser);
 
         if (isUpdated) {

@@ -1,9 +1,14 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-public class User {
+/*
+ * JavaBean Class to represent a user in the system.
+ * includes an id, unique username, password, full name, shipping address, credit card number,
+ * credit card expiry date, credit card security code, and order history of the user
+ */
+public class User implements Serializable{
     private int id;
     private String username;
     private String password;

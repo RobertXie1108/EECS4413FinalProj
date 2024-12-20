@@ -214,7 +214,7 @@
         <div class="button-container">
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
-                    <form action="profile.jsp" method="get" style="display: inline;">
+                    <form action="ProfileServlet" method="get" style="display: inline;">
                         <button type="submit">My Account</button>
                     </form>
                 </c:when>
@@ -254,6 +254,11 @@
             <input type="hidden" name="action" value="filter">
             <input type="hidden" name="category" value="NFL">
             <button type="submit">NFL</button>
+        </form>
+        <form action="ProductController" method="get">
+            <input type="hidden" name="action" value="filter">
+            <input type="hidden" name="category" value="Soccer">
+            <button type="submit">Soccer</button>
         </form>
         <form action="ProductController" method="get">
             <input type="hidden" name="action" value="filter">

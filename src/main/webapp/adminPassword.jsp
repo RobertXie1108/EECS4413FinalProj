@@ -24,6 +24,7 @@
             color: #007bff;
         }
         .form-group {
+        	max-width: 380px;
             margin-bottom: 15px;
             text-align: left;
         }

@@ -1,8 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.util.List;
-
-public class Order {
+/*
+ * JavaBean Class to represent an order made by the user.
+ * Includes the id of the order, the id of the user who made the purchase,
+ * total price, a list of items, date of the order, and the username attached to the order.
+ */
+public class Order implements Serializable{
     private int id;
     private int userId;
     private double totalPrice;

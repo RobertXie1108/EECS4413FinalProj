@@ -23,6 +23,7 @@
             text-align: center;
         }
         .form-group {
+        	max-width: 570px;
             margin-bottom: 15px;
         }
         label {

@@ -100,7 +100,7 @@
             <form action="AdminOrderController" method="get">
                 <button type="submit">View Sales History</button>
             </form>
-            <a href="manageUsers.jsp">Manage Users</a>
+            <a href="AdminUserController">Manage Users</a>
         </div>
     </div>
     <footer>
