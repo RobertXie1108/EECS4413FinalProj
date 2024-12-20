@@ -27,7 +27,7 @@
             font-weight: bold;
         }
         input[type="text"], input[type="number"] {
-            width: 100%;
+            width: 97%;
             padding: 8px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
