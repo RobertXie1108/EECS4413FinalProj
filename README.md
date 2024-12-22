@@ -18,4 +18,6 @@ docker run --platform linux/amd64 -d -p 8080:8080 jasont00/web-store:1
 ### For any users who run into this error
 rosetta error: Rosetta is only intended to run on Apple Silicon with a macOS host using Virtualization.framework with Rosetta mode enabled
 #### Use the command below
+```
 softwareupdate --install-rosetta
+```
